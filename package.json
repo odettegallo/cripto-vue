@@ -13,8 +13,11 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "@mdi/font": "^7.4.47",
+    "axios": "^1.12.2",
     "firebase": "^12.4.0",
     "pinia": "^3.0.3",
+    "sass": "^1.93.2",
     "vue": "^3.5.22",
     "vue-router": "^4.5.1",
     "vuetify": "^3.10.6"
