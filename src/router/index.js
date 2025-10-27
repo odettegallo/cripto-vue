@@ -55,7 +55,7 @@ const router = createRouter({
       component: EditarCriptoView,
       meta: { 
         requiresAuth: true,
-        title: 'Editar Curso - ADWEB Online'
+        title: 'Editar Link - Coin App'
       }
     },
     {

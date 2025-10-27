@@ -9,7 +9,7 @@
       </div>
       
       <AdminDataTable 
-        v-if="isAdmin" 
+        v-if="role === isAdmin" 
         :links="links" 
         @links-change="links"
       />
@@ -51,6 +51,7 @@ export default {
 
     // Cambiar la referencia de 'getCourses' a 'getLinks'
     const links = computed(() => dataStore.getLinks); 
+    const role = computed(() => authStore.role);
     const isAdmin = computed(() => authStore.isAdmin);
     const currentEmail = computed(() => authStore.currentUserEmail);
 
@@ -58,6 +59,7 @@ export default {
       isAdmin,
       currentEmail,
       links, // Se expone 'links'
+      role,
       loading: computed(() => dataStore.loading),
       error: computed(() => dataStore.error),
     }
