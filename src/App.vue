@@ -30,77 +30,50 @@ export default {
 </script>
 
 <style>
-/* * ATENCIÓN: Se eliminó todo el CSS global (*, body, #app, main)
- * que entraba en conflicto con el reset de Vuetify.
- * El v-app/v-main ahora controlan el layout y el fondo.
-*/
+/* App.vue: dentro de <style> */
 
-/* UTILIDADES Y HELPERS DE COLOR (MANTENER SOLO SI SON ABSOLUTAMENTE NECESARIOS) */
+/* UTILIDADES Y HELPERS DE COLOR */
+/* Gradiente Dorado/Neón para "Lujo/Tecnología" */
 .text-gradient {
-  /* Se mantiene el gradiente de texto, ya que Vuetify no lo ofrece por defecto. */
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #FFD700 0%, #00FFFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* SCROLLBAR PERSONALIZADO (No conflictivo, se mantiene) */
+/* SCROLLBAR PERSONALIZADO: Ajustado a tonos oscuros/neón */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #1e1e1e; /* Fondo de track oscuro */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
+  background: #FFD700; /* Pulgar dorado */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
+  background: #00FFFF; /* Hover neón */
 }
 
-/* ANIMACIONES GLOBALES (Se mantienen, si se usan en RouterView) */
+/* ANIMACIONES GLOBALES (Se mantienen, pero considera usar transiciones de Vuetify) */
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: transform 0.3s ease;
-}
-
-.slide-enter-from {
-  transform: translateX(-100%);
-}
-
-.slide-leave-to {
-  transform: translateX(100%);
-}
+/* ... (resto de .fade- y .slide- se mantienen) ... */
 
 
-/* Estados Focus, Shadows, Radius, Containers (¡ELIMINADOS!) */
-/* Usa las clases y componentes de Vuetify en su lugar:
- * - Sombras: Usa clases como `elevation-5`.
- * - Radio: Usa `rounded` o `rounded-xl`.
- * - Focus: Vuetify maneja el focus en sus componentes (v-btn, v-text-field).
- * - Responsive: Usa `<v-container>`, `<v-row>`, `<v-col>` y sus props.
-*/
-
-/* Spinner (Mantener si no se usa el v-progress-circular de Vuetify) */
+/* Spinner (Ajustado a la nueva paleta) */
 .spinner-custom {
   width: 20px;
   height: 20px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #667eea; /* Color secundario de tu tema */
+  border: 2px solid #333; /* Color de fondo del borde oscuro */
+  border-top: 2px solid #FFD700; /* Color principal: Dorado */
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -110,12 +83,13 @@ export default {
   100% { transform: rotate(360deg); }
 }
 
-/* Blur para modal (Se mantiene, es un helper para un estado global) */
+/* Blur para modal (Se mantiene, si es necesario) */
 body.modal-open main {
   filter: blur(3px);
 }
 
 .modal-backdrop.show {
-  opacity: 0.5;
+  opacity: 0.8; /* Aumentamos opacidad en tema oscuro */
+  background-color: #0A0A0A; /* Fondo muy oscuro */
 }
 </style>

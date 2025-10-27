@@ -6,21 +6,21 @@
           <div class="login-form-container">
             <div class="text-center mb-4">
               <div class="logo-container mb-3">
-                <v-icon color="primary" size="48">mdi-school</v-icon>
+                <v-icon color="secondary" size="48">mdi-key-chain</v-icon>
               </div>
-              <h2 class="fw-bold text-dark mb-2">Iniciar Sesión</h2>
-              <p class="text-muted">Accede a tu cuenta de Coin App</p>
+              <h2 class="fw-bold mb-2 text-primary text-uppercase">Acceso al Panel</h2>
+              <p class="text-medium-emphasis">Ingresa tus credenciales seguras</p>
           
             </div>
 
             <v-form @submit.prevent="handleLogin" class="login-form">
               <v-text-field
                 v-model="formData.email"
-                label="Correo Electrónico"
+                label="Billetera (Correo Electrónico)"
                 type="email"
                 :error="!!errors.email"
                 :error-messages="errors.email ? [errors.email] : []"
-                prepend-inner-icon="mdi-email"
+                prepend-inner-icon="mdi-email-outline"
                 density="comfortable"
                 required
               />
@@ -28,10 +28,10 @@
               <v-text-field
                 v-model="formData.password"
                 :type="showPassword ? 'text' : 'password'"
-                label="Contraseña"
+                label="Clave de Seguridad"
                 :error="!!errors.password"
                 :error-messages="errors.password ? [errors.password] : []"
-                prepend-inner-icon="mdi-lock"
+                prepend-inner-icon="mdi-shield-lock-outline"
                 append-inner-icon="mdi-eye"
                 @click:append-inner="togglePassword"
                 density="comfortable"
@@ -40,7 +40,8 @@
 
               <v-checkbox
                 v-model="formData.rememberMe"
-                label="Recordar mi sesión"
+                label="Mantener sesión activa (Token)"
+                color="secondary"
                 class="mb-4"
               />
 
@@ -48,11 +49,11 @@
                 type="submit"
                 color="primary"
                 size="large"
-                class="w-100 mb-3"
+                class="w-100 mb-3 btn-neon"
                 :loading="isLoading"
-                prepend-icon="mdi-login"
+                prepend-icon="mdi-rocket-launch-outline"
               >
-                {{ isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+                {{ isLoading ? 'Conectando...' : 'Iniciar Sesión' }}
               </v-btn>
 
               <v-alert v-if="generalError" type="error" variant="tonal" class="mb-3">
@@ -62,8 +63,8 @@
               <div class="text-center">
                 <p class="mb-0">
                   ¿No tienes una cuenta?
-                  <RouterLink to="/registro" class="text-primary text-decoration-none fw-semibold">
-                    Regístrate aquí
+                  <RouterLink to="/registro" class="text-secondary text-decoration-none fw-semibold">
+                    Crea tu Billetera
                   </RouterLink>
                 </p>
               </div>
@@ -71,27 +72,27 @@
           </div>
         </v-col>
 
-        <v-col cols="12" lg="6" class="d-none d-lg-flex align-center justify-center bg-light">
-          <div class="text-center">
+        <v-col cols="12" lg="6" class="d-none d-lg-flex align-center justify-center bg-dark-panel">
+          <div class="text-center text-white">
             <div class="illustration-container mb-4">
-              <v-icon color="primary" size="128" style="opacity: 0.8;">mdi-laptop</v-icon>
+              <v-icon color="secondary" size="128" style="opacity: 0.8;">mdi-bitcoin</v-icon>
             </div>
-            <h3 class="fw-bold text-dark mb-3">Tu Portal a la Inversión en Criptomonedas</h3>
-            <p class="text-muted fs-5 mb-4">
-              Accede a enlaces de compra seguros y verificados.
+            <h3 class="fw-bold mb-3 text-gradient">Tu Gateway de Lujo a Web3</h3>
+            <p class="fs-5 mb-4 text-medium-emphasis">
+              Gestión de Activos Digitales de Próxima Generación.
             </p>
             <div class="features-list">
               <div class="feature-item mb-2">
-                <v-icon color="success" class="me-2">mdi-check-circle</v-icon>
-                <span>Cursos actualizados</span>
+                <v-icon color="primary" class="me-2">mdi-check-decagram</v-icon>
+                <span class="text-medium-emphasis">Auditoría de Seguridad Nivel-A</span>
               </div>
               <div class="feature-item mb-2">
-                <v-icon color="success" class="me-2">mdi-check-circle</v-icon>
-                <span>Instructores expertos</span>
+                <v-icon color="primary" class="me-2">mdi-check-decagram</v-icon>
+                <span class="text-medium-emphasis">Transacciones Instantáneas (L2)</span>
               </div>
               <div class="feature-item">
-                <v-icon color="success" class="me-2">mdi-check-circle</v-icon>
-                <span>Certificados oficiales</span>
+                <v-icon color="primary" class="me-2">mdi-check-decagram</v-icon>
+                <span class="text-medium-emphasis">Soporte Multilingüe VIP 24/7</span>
               </div>
             </div>
           </div>
@@ -102,7 +103,7 @@
 </template>
 
 <script>
-// ... (script content is unchanged)
+// ... (mismo script)
 import { useAuthStore } from '@/stores/authStore';
 
 export default {
@@ -122,6 +123,7 @@ export default {
   },
   methods: {
     validateForm() {
+      // ... (misma lógica de validación)
       this.errors = {}
       
       // Email validation
@@ -182,112 +184,106 @@ export default {
 </script>
 
 <style scoped>
+/* Contenedor principal: Fondo muy oscuro/negro */
 .login-container {
-  /* Cambio a un gradiente más suave (tonos pastel de azul/lila) */
   min-height: 100vh;
-  background: linear-gradient(135deg, #a3c4f3 0%, #b2a3f3 100%);
+  /* Usamos el color de fondo definido en main.js */
+  background: var(--v-theme-background, #0A0A0A); 
   height: 100vh;
   display: flex;
   align-items: center;
 }
 
+/* Contenedor del formulario: Tarjeta oscura y elegante */
 .login-form-container {
-  background: white;
+  /* Usamos el color surface oscuro definido en main.js */
+  background: var(--v-theme-surface, #121212);
   padding: 3rem;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra más sutil */
+  border-radius: 12px;
+  /* Sombra sutil neón/dorada */
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.05), 0 0 20px rgba(0, 255, 255, 0.05); 
   width: 100%;
   max-width: 450px;
+  /* Borde sutil */
+  border: 1px solid rgba(255, 215, 0, 0.1); 
 }
 
+/* Panel lateral (d-none d-lg-flex) */
+.bg-dark-panel {
+  /* Fondo aún más oscuro o degradado sutil */
+  background: #0D0D0D; 
+  /* Agregamos un patrón de malla tecnológica */
+  background-image: radial-gradient(#1e1e1e 1px, transparent 0);
+  background-size: 40px 40px;
+}
+
+/* Animaciones/Íconos */
 .logo-container {
-  animation: fadeInDown 0.8s ease-out;
+  animation: pulseNeon 1.5s infinite alternate;
 }
 
-.login-form {
-  animation: fadeInUp 0.8s ease-out;
-}
-
-
-
-.btn-primary {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 600;
+/* Botón con efecto neón/lujo */
+.btn-neon {
+  /* No se necesita definir background aquí, Vuetify lo toma de color="primary" */
+  font-weight: 700 !important;
+  text-transform: uppercase;
   transition: all 0.3s ease;
+  /* Borde neón sutil */
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.2); 
+  letter-spacing: 1px;
 }
 
-.btn-primary:hover {
+.btn-neon:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  /* Sombra más intensa al pasar el ratón */
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.5), 0 8px 15px rgba(0, 0, 0, 0.2);
 }
 
 .illustration-container {
-  animation: float 3s ease-in-out infinite;
+  /* Animación tipo respiración/lujo */
+  animation: floatLuxury 4s ease-in-out infinite;
 }
 
 .feature-item {
   font-size: 1.1rem;
   font-weight: 500;
+  color: #A0A0A0; /* Texto gris para contraste */
 }
 
-@keyframes fadeInDown {
+/* Keyframes ajustados para el tema de lujo */
+@keyframes pulseNeon {
   from {
-    opacity: 0;
-    transform: translateY(-30px);
+    opacity: 0.9;
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px var(--v-theme-primary));
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 8px var(--v-theme-primary));
   }
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes float {
+@keyframes floatLuxury {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-15px) rotate(1deg);
   }
 }
 
+/* Media Queries ajustadas al nuevo tema */
 @media (max-width: 991.98px) {
   .login-form-container {
     margin: 2rem;
-    padding: 2rem;
+    padding: 2.5rem;
+    border: none; /* Eliminar el borde en móvil para simplicidad */
   }
   
   .login-container {
-    /* Fondo blanco en móvil para mejor contraste con la tarjeta */
-    background: white;
+    /* Mantener el fondo oscuro en móvil para consistencia del tema */
+    background: var(--v-theme-background, #0A0A0A);
   }
 }
-
-@media (max-width: 575.98px) {
-  .login-form-container {
-    margin: 1rem;
-    padding: 1.5rem;
-    border-radius: 15px;
-  }
-}
-  
-  /* Centrado vertical total (ya estaba bien definido) */
-  /* .login-container {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-  } */
 </style>
