@@ -8,27 +8,26 @@ import router from './router'
 import 'vuetify/styles'
 import '@mdi/font/css/materialdesignicons.css'
 import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
 
 const app = createApp(App)
 const pinia = createPinia()
 const vuetify = createVuetify({
+  components,
+  directives,
   icons: { defaultSet: 'mdi' },
   theme: {
-    defaultTheme: 'adwebTheme',
+    defaultTheme: 'criptoTheme',
     themes: {
-      adwebTheme: {
+      criptoTheme: {
         dark: true, // ¡Importante! Cambiamos a tema oscuro para el lujo
         colors: {
-          // Fondo oscuro/lujo (Surface se usa a menudo para el fondo principal de componentes)
           surface: '#121212', 
-          // Color principal: Dorado/Ámbar de lujo y dinero
-          primary: '#FFD700', // Gold
-          // Color secundario: Azul eléctrico/Neón para tecnología
-          secondary: '#00FFFF', // Cyan/Aqua
-          // Color de fondo general de la app, más oscuro que surface
+          primary: '#FFD700', 
+          secondary: '#00FFFF', 
           background: '#0A0A0A',
-          // Color para el texto en fondos oscuros
-          'on-surface': '#F0F0F0', 
+          'on-surface': '#F0F0F0',
         }
       }
     }

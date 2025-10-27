@@ -1,4 +1,4 @@
-// AdminCoursesManager.vue (Refactorizado)
+// AdminDataTable.vue (Renombrado conceptualmente a AdminLinksManager)
 
 <template>
   <v-card elevation="4" rounded="lg" class="mb-5">
@@ -12,7 +12,7 @@
         <v-col cols="12" sm="6" md="5" lg="6">
           <v-text-field 
             v-model="searchTerm" 
-            label="Búsqueda por Código, Nombre o Descripción" 
+            label="Búsqueda por Nombre, Símbolo o Descripción" 
             density="compact"
             hide-details
             clearable
@@ -39,7 +39,7 @@
         
         <v-col cols="12" md="3" lg="3" class="text-md-right">
           <v-btn color="primary" @click="openAddModal" block prepend-icon="mdi-plus">
-            Agregar Nuevo Curso
+            Agregar Nuevo Enlace
           </v-btn>
         </v-col>
       </v-row>
@@ -47,41 +47,33 @@
       <v-table class="align-middle rounded-lg elevation-1">
         <thead>
           <tr>
-            <th class="text-left">Código</th>
+            <th class="text-left">ID</th>
             <th class="text-left">Nombre</th>
+            <th class="text-left">Símbolo</th>
+            <th class="text-left">URL de Compra</th>
             <th class="text-left">Estado</th>
-            <th class="text-left">Precio</th>
-            <th class="text-left">Duración</th>
-            <th class="text-left">Cupos</th>
-            <th class="text-left">Inscritos</th>
-            <th class="text-left">Asignados</th>
             <th class="text-right">Acciones</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="course in filteredCourses" :key="course.id">
-            <td>{{ course.code }}</td>
-            <td class="font-weight-medium">{{ course.name }}</td>
-            <td>
-              <v-chip :color="statusColor(course.status)" label size="small">{{ getStatusText(course.status) }}</v-chip>
+          <tr v-for="link in filteredLinks" :key="link.id">
+            <td>{{ link.id }}</td>
+            <td class="font-weight-medium">{{ link.nombre }}</td>
+            <td>{{ link.simbolo }}</td>
+            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis;">
+              <a :href="link.url_compra" target="_blank">{{ link.url_compra.substring(0, 30) }}...</a>
             </td>
-            <td class="font-weight-bold">{{ currency(course.price) }}</td>
-            <td>{{ course.duration }}</td>
-            <td>{{ course.cupos }}</td>
-            <td>{{ course.inscritos }}</td>
-            <td style="max-width: 250px;">
-              <div class="d-flex flex-wrap" style="gap: 4px;">
-                <v-chip v-for="m in course.assignedMembers" :key="m" color="secondary" size="x-small">{{ m }}</v-chip>
-              </div>
+            <td>
+              <v-chip :color="link.activo ? 'success' : 'error'" label size="small">{{ link.activo ? 'Activo' : 'Inactivo' }}</v-chip>
             </td>
             <td class="text-right">
-              <v-btn variant="text" color="primary" size="small" class="mr-1" @click="editCourseRedirect(course)" icon="mdi-pencil"></v-btn>
-              <v-btn variant="text" color="error" size="small" @click="confirmDeleteCourse(course)" icon="mdi-delete"></v-btn>
+              <v-btn variant="text" color="primary" size="small" class="mr-1" @click="editLinkRedirect(link)" icon="mdi-pencil"></v-btn>
+              <v-btn variant="text" color="error" size="small" @click="confirmDeleteLink(link)" icon="mdi-delete"></v-btn>
             </td>
           </tr>
-          <tr v-if="filteredCourses.length === 0">
-            <td colspan="9" class="text-center text-caption py-4">
-              No se encontraron cursos con los filtros aplicados.
+          <tr v-if="filteredLinks.length === 0">
+            <td colspan="6" class="text-center text-caption py-4">
+              No se encontraron enlaces con los filtros aplicados.
             </td>
           </tr>
         </tbody>
@@ -90,45 +82,33 @@
       <v-dialog v-model="addModalOpen" max-width="900" persistent>
         <v-card rounded="lg">
           <v-card-title class="bg-primary text-white d-flex align-center justify-space-between">
-            <span>Agregar Nuevo Curso</span>
+            <span>Agregar Nuevo Enlace Cripto</span>
             <v-btn icon="mdi-close" variant="text" color="white" @click="closeAddModal"></v-btn>
           </v-card-title>
           
           <v-card-text class="pa-5">
-            <v-form @submit.prevent="addCourseWithConfirmation">
+            <v-form @submit.prevent="addLinkWithConfirmation">
               <v-row dense>
                 
-                <v-col cols="12" md="3">
-                  <v-text-field label="Código" v-model="newCourse.code" required variant="outlined" density="comfortable" />
+                <v-col cols="12" md="4">
+                  <v-text-field label="Nombre (Bitcoin)" v-model="newLink.nombre" required variant="outlined" density="comfortable" />
                 </v-col>
                 <v-col cols="12" md="4">
-                  <v-text-field label="Nombre" v-model="newCourse.name" required variant="outlined" density="comfortable" />
+                  <v-text-field label="Símbolo (BTC)" v-model="newLink.simbolo" required variant="outlined" density="comfortable" />
                 </v-col>
-                <v-col cols="12" md="5">
-                  <v-text-field label="URL de Imagen" v-model="newCourse.imageUrl" required variant="outlined" density="comfortable" />
+                <v-col cols="12" md="4">
+                  <v-select label="Activo" v-model="newLink.activo" :items="[true, false]" required variant="outlined" density="comfortable" />
                 </v-col>
-
-                <v-col cols="12" md="3">
-                  <v-select label="Estado" v-model="newCourse.status" :items="statuses" required variant="outlined" density="comfortable" />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field label="Cupos" type="number" v-model.number="newCourse.cupos" required min="0" variant="outlined" density="comfortable" />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field label="Inscritos" type="number" v-model.number="newCourse.inscritos" required min="0" variant="outlined" density="comfortable" />
-                </v-col>
-                <v-col cols="12" md="3">
-                  <v-text-field label="Duración" v-model="newCourse.duration" required variant="outlined" density="comfortable" />
-                </v-col>
-
-                <v-col cols="12" md="6">
-                  <v-text-field label="Costo ($)" type="number" v-model.number="newCourse.price" required min="0" variant="outlined" density="comfortable" />
-                </v-col>
-                <v-col cols="12" md="6">
-                  </v-col>
 
                 <v-col cols="12">
-                  <v-textarea label="Descripción" v-model="newCourse.description" rows="3" required variant="outlined" density="comfortable" />
+                  <v-text-field label="URL de Compra (https://...)" v-model="newLink.url_compra" required variant="outlined" density="comfortable" />
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field label="URL de Imagen" v-model="newLink.url_imagen" required variant="outlined" density="comfortable" />
+                </v-col>
+
+                <v-col cols="12">
+                  <v-textarea label="Descripción" v-model="newLink.descripcion" rows="3" required variant="outlined" density="comfortable" />
                 </v-col>
               </v-row>
             </v-form>
@@ -139,30 +119,31 @@
           <v-card-actions class="pa-4">
             <v-spacer />
             <v-btn color="secondary" variant="text" @click="closeAddModal">Cancelar</v-btn>
-            <v-btn color="primary" @click="addCourseWithConfirmation" prepend-icon="mdi-plus" :disabled="!isNewCourseValid">Agregar Curso</v-btn>
+            <v-btn color="primary" @click="addLinkWithConfirmation" prepend-icon="mdi-plus" :disabled="!isNewLinkValid">Agregar Enlace</v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
       
-    </v-card-text>
+      </v-card-text>
   </v-card>
 </template>
 
 <script>
 import { mapState, mapActions } from 'pinia';
-import { useDataStore } from '@/stores/dataStore';
+// ADAPTACIÓN: Importar useDataStore
+import { useDataStore } from '@/stores/dataStore'; 
 
 export default {
-  name: 'AdminDataT',
+  name: 'AdminLinksManager', // Nombre adaptado
   
   data() {
     return {
       searchTerm: '',
       filterStatus: '',
-      statuses: ['disponible', 'en_revision', 'cerrado'],
-      newCourse: { 
-        code: '', name: '', status: 'disponible', price: 0, 
-        duration: '', description: '', cupos: 0, inscritos: 0, imageUrl: '' 
+      statuses: [true, false], 
+      // ADAPTACIÓN: Estructura de datos para nuevos enlaces
+      newLink: { 
+        nombre: '', simbolo: '', url_compra: '', descripcion: '', url_imagen: '', activo: true
       },
       addModalOpen: false,
       alertMessage: '',
@@ -171,35 +152,37 @@ export default {
   },
   
   computed: {
-    ...mapState(useCoursesStore, {
-      allCourses: 'getCourses',
+    // ADAPTACIÓN: Se cambia useCoursesStore por useDataStore y allCourses por allLinks
+    ...mapState(useDataStore, {
+      allLinks: 'getLinks',
     }),
     
-    // Lista de ítems para el v-select de estado (incluye 'Todos')
+    // Lista de ítems para el v-select de estado
     statusItems() {
       return [
         { text: 'Todos', value: '' },
-        { text: 'Disponible', value: 'disponible' },
-        { text: 'En Revisión', value: 'en_revision' },
-        { text: 'Cerrado', value: 'cerrado' },
+        { text: 'Activo', value: true },
+        { text: 'Inactivo', value: false },
       ];
     },
 
-    // Validación simple para habilitar el botón de agregar
-    isNewCourseValid() {
-      return this.newCourse.code && this.newCourse.name && this.newCourse.duration && this.newCourse.description;
+    // Validación simple
+    isNewLinkValid() {
+      // ADAPTACIÓN: Validar campos de enlace
+      return this.newLink.nombre && this.newLink.simbolo && this.newLink.url_compra && this.newLink.descripcion;
     },
 
-    filteredCourses() {
-      return this.allCourses.filter(course => {
+    filteredLinks() {
+      return this.allLinks.filter(link => {
         const matchesSearch = this.searchTerm 
-          ? [course.code, course.name, course.description].some(field => 
-              field && field.toLowerCase().includes(this.searchTerm.toLowerCase())
+          ? [link.nombre, link.simbolo, link.descripcion].some(field => 
+              field && String(field).toLowerCase().includes(this.searchTerm.toLowerCase())
             ) 
           : true;
         
-        const matchesStatus = this.filterStatus 
-          ? course.status === this.filterStatus 
+        // ADAPTACIÓN: Filtrar por la propiedad 'activo'
+        const matchesStatus = this.filterStatus !== ''
+          ? link.activo === this.filterStatus 
           : true;
 
         return matchesSearch && matchesStatus;
@@ -208,29 +191,8 @@ export default {
   },
   
   methods: {
-    ...mapActions(useCoursesStore, ['addCourse', 'deleteCourse']),
-
-    currency(val) {
-      return new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(val || 0)
-    },
-    
-    statusColor(status) {
-        switch (status) {
-            case 'disponible': return 'success';
-            case 'en_revision': return 'warning';
-            case 'cerrado': return 'error';
-            default: return 'secondary';
-        }
-    },
-
-    getStatusText(status) {
-        switch (status) {
-            case 'disponible': return 'Disponible';
-            case 'en_revision': return 'En Revisión';
-            case 'cerrado': return 'Cerrado';
-            default: return 'Desconocido';
-        }
-    },
+    // ADAPTACIÓN: Se cambian las acciones a addLink y deleteLink
+    ...mapActions(useDataStore, ['addLink', 'deleteLink']),
 
     showAlert(message, type = 'alert-success') {
       this.alertMessage = message;
@@ -244,63 +206,62 @@ export default {
 
     openAddModal() {
       this.clearAlert();
-      // Resetear el formulario al abrir
-      this.newCourse = { code: '', name: '', status: 'disponible', price: 0, duration: '', description: '', cupos: 0, inscritos: 0, imageUrl: '' };
+      // Resetear el formulario al abrir con valores por defecto
+      this.newLink = { nombre: '', simbolo: '', url_compra: '', descripcion: '', url_imagen: '', activo: true };
       this.addModalOpen = true;
     },
     closeAddModal() {
       this.addModalOpen = false;
     },
 
-    async addCourseWithConfirmation() {
-      if (!this.isNewCourseValid) {
-        this.showAlert('❌ Por favor, complete todos los campos requeridos (Código, Nombre, Duración, Descripción).', 'alert-danger');
+    async addLinkWithConfirmation() {
+      if (!this.isNewLinkValid) {
+        this.showAlert('❌ Por favor, complete todos los campos requeridos.', 'alert-danger');
         return;
       }
       
-      const confirmAdd = window.confirm(`¿Desea agregar el curso "${this.newCourse.name}" (Costo: ${this.currency(this.newCourse.price)}) a la base de datos?`);
+      const confirmAdd = window.confirm(`¿Desea agregar el enlace "${this.newLink.nombre}" (Símbolo: ${this.newLink.simbolo}) a la base de datos?`);
 
       if (confirmAdd) {
-        const courseData = {
-          code: this.newCourse.code.trim(),
-          name: this.newCourse.name.trim(),
-          imageUrl: this.newCourse.imageUrl.trim() || 'https://picsum.photos/id/' + (Math.floor(Math.random() * 999) + 1) + '/800/600',
-          cupos: Number(this.newCourse.cupos) || 0,
-          inscritos: Number(this.newCourse.inscritos) || 0,
-          duration: this.newCourse.duration.trim(),
-          price: Number(this.newCourse.price) || 0,
-          description: this.newCourse.description.trim(),
-          status: this.newCourse.status || 'disponible',
-          assignedMembers: [],
+        const linkData = {
+          // ADAPTACIÓN: Mapeo de datos al schema de Firestore
+          nombre: this.newLink.nombre.trim(),
+          simbolo: this.newLink.simbolo.trim(),
+          url_compra: this.newLink.url_compra.trim(),
+          descripcion: this.newLink.descripcion.trim(),
+          url_imagen: this.newLink.url_imagen.trim(),
+          activo: this.newLink.activo,
         };
         
-        const result = await this.addCourse(courseData);
+        const result = await this.addLink(linkData);
         
         if (result.success) {
           this.closeAddModal();
-          this.showAlert(`✅ Curso "${this.newCourse.name}" agregado correctamente.`, 'alert-success');
+          this.showAlert(`✅ Enlace "${this.newLink.nombre}" agregado correctamente.`, 'alert-success');
         } else {
-          this.showAlert(`❌ Error al agregar curso: ${result.error}`, 'alert-danger');
+          this.showAlert(`❌ Error al agregar enlace: ${result.error}`, 'alert-danger');
         }
       }
     },
 
-    editCourseRedirect(course) {
-      this.$router.push({ name: 'EditarCurso', params: { id: course.id } });
+    editLinkRedirect(link) {
+      // ADAPTACIÓN: Se cambia el nombre de la ruta a 'EditarCripto'
+      this.$router.push({ name: 'EditarCripto', params: { id: link.id } });
     },
 
-    async confirmDeleteCourse(course) {
+    async confirmDeleteLink(link) {
       this.clearAlert();
       
-      const confirmDelete = window.confirm(`⚠️ ¿Desea realmente eliminar el curso "${course.name}"? Esta acción es irreversible.`);
+      const confirmDelete = window.confirm(`⚠️ ¿Desea realmente eliminar el enlace de "${link.nombre}"? Esta acción es irreversible.`);
       
       if (confirmDelete) {
-        const result = await this.deleteCourse(course.id);
+        // ADAPTACIÓN: Llamada a deleteLink
+        const result = await this.deleteLink(link.id);
         
         if (result.success) {
-          this.showAlert(`✅ Curso "${course.name}" eliminado correctamente.`, 'alert-success');
+          this.showAlert(`✅ Enlace "${link.nombre}" eliminado correctamente.`, 'alert-success');
         } else {
-          this.showAlert(`❌ Error al eliminar curso: ${result.error}`, 'alert-danger');
+          this.showAlert(`❌ Error al eliminar enlace: ${result.error}`, 'alert-danger');
         }
       }
     }
@@ -310,6 +271,5 @@ export default {
 </script>
 
 <style scoped>
-/* Las clases de Vuetify como elevation-4 y rounded-lg manejan la presentación */
-/* No es necesario un CSS específico si se usan las clases de utilidad */
+/* Estilos adaptados */
 </style>

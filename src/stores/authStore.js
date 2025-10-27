@@ -17,7 +17,8 @@ export const useAuthStore = defineStore('auth', {
     isLoggedIn: (state) => state.isAuthenticated,
     isAdmin: (state) => {
       if (!state.user || !state.user.email) return false;
-      const adminEmails = ['admin@adweb.com', 'administrador@adweb.com', 'usuario1@mitienda.com'];
+      // ADAPTACIÓN: Cambiar correos de ejemplo al contexto de FinTech Cripto
+      const adminEmails = ['admin@fintech.com', 'administrador@fintech.com', 'usuario1@mitienda.com'];
       return adminEmails.includes(state.user.email);
     }
   },
@@ -63,12 +64,16 @@ export const useAuthStore = defineStore('auth', {
       onAuthStateChanged(auth, (user) => {
         this.setUser(user);
         if (user) {
-          this.setAuthModalMessage(`¡Bienvenido! Has ingresado como: ${user.email}`);
-          if (router.currentRoute.value.name === 'Login' || router.currentRoute.value.name === 'Register') {
+          // ADAPTACIÓN: Mensaje de bienvenida adaptado
+          this.setAuthModalMessage(`¡Bienvenido al Crypto Portal! Has ingresado como: ${user.email}`);
+          if (router.currentRoute.value.name !== 'Home' && router.currentRoute.value.name !== 'Admin') {
             router.push({ name: 'Home' });
           }
         } else {
-          this.setAuthModalMessage('');
+          // Cuando el usuario cierra sesión, redirige a 'Login' (manejar en logoutUser también)
+          if (router.currentRoute.value.meta.requiresAuth) {
+             router.push({ name: 'Login' });
+          }
         }
       });
     }
