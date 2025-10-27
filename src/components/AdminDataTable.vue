@@ -150,10 +150,10 @@
 
 <script>
 import { mapState, mapActions } from 'pinia';
-import { useCoursesStore } from '@/stores/coursesStore';
+import { useDataStore } from '@/stores/dataStore';
 
 export default {
-  name: 'AdminCoursesManager',
+  name: 'AdminDataT',
   
   data() {
     return {
