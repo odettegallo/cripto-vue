@@ -9,7 +9,8 @@
                 <v-icon color="primary" size="48">mdi-school</v-icon>
               </div>
               <h2 class="fw-bold text-dark mb-2">Iniciar Sesión</h2>
-              <p class="text-muted">Accede a tu cuenta de ADWEB Online</p>
+              <p class="text-muted">Accede a tu cuenta de Coin App</p>
+          
             </div>
 
             <v-form @submit.prevent="handleLogin" class="login-form">
@@ -75,9 +76,9 @@
             <div class="illustration-container mb-4">
               <v-icon color="primary" size="128" style="opacity: 0.8;">mdi-laptop</v-icon>
             </div>
-            <h3 class="fw-bold text-dark mb-3">Aprende con ADWEB Online</h3>
+            <h3 class="fw-bold text-dark mb-3">Tu Portal a la Inversión en Criptomonedas</h3>
             <p class="text-muted fs-5 mb-4">
-              Accede a cursos de programación web de alta calidad
+              Accede a enlaces de compra seguros y verificados.
             </p>
             <div class="features-list">
               <div class="feature-item mb-2">

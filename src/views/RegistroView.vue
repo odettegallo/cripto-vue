@@ -7,9 +7,9 @@
             <div class="illustration-container mb-4">
               <v-icon color="primary" size="128" style="opacity: 0.8;">mdi-account-plus</v-icon>
             </div>
-            <h3 class="fw-bold text-dark mb-3">Únete a ADWEB Online</h3>
+            <h3 class="fw-bold text-dark mb-3">Únete al Portal Cripto</h3>
             <p class="text-muted fs-5 mb-4">
-              Comienza tu viaje en el desarrollo web
+              Comienza tu viaje a las finanzas descentralizadas hoy mismo.
             </p>
             <div class="features-list">
               <div class="feature-item mb-2">
@@ -35,7 +35,7 @@
                 <v-icon color="primary" size="48">mdi-school</v-icon>
               </div>
               <h2 class="fw-bold text-dark mb-2">Crear Cuenta</h2>
-              <p class="text-muted">Regístrate en ADWEB Online</p>
+              <p class="text-muted">Regístrate en Coin App</p>
             </div>
 
             <v-form @submit.prevent="handleRegister" class="register-form">
