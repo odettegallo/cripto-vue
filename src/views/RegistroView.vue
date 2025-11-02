@@ -238,11 +238,12 @@ export default {
 
       } catch (error) {
         console.error('Register error:', error)
-        if (error === 'auth/email-already-in-use') {
+        const errorCode = error.code || ''
+        if (error.code === 'auth/email-already-in-use') {
           this.generalError = 'El correo electrónico ya está en uso'
-        } else if (error === 'auth/invalid-email') {
+        } else if (error.code === 'auth/invalid-email') {
           this.generalError = 'El correo electrónico no es válido'
-        } else if (error === 'auth/weak-password') {
+        } else if (error.code === 'auth/weak-password') {
           this.generalError = 'La contraseña es demasiado débil'
         } else {
           this.generalError = 'Error al crear la cuenta. Intenta nuevamente.'
