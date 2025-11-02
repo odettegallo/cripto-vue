@@ -5,6 +5,7 @@ import HomeView from '../views/HomeView.vue'
 import AdminView from '../views/AdminView.vue'
 import EditarCriptoView from '../views/EditarCriptoView.vue'
 import { useAuthStore } from '@/stores/authStore';
+import CriptoEnlaces from '@/views/CriptoEnlacesView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,11 @@ const router = createRouter({
         requiresAuth: true,
         title: 'Inicio - Coin App'
       }
+    },
+    {
+     path: '/enlaces',
+     name: 'Enlaces',
+     component: CriptoEnlaces,
     },
     {
       path: '/admin',

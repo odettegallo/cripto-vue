@@ -16,6 +16,10 @@
                 <v-icon class="me-1" color="white">mdi-home</v-icon>
                 Inicio
               </RouterLink>
+              <RouterLink class="nav-link text-white text-decoration-none" to="/enlaces">
+                <v-icon class="me-1" color="white">mdi-link</v-icon>
+                Cripto Enlaces
+              </RouterLink>
               <RouterLink v-if="isAdmin" class="nav-link text-white text-decoration-none ms-4" to="/admin">
                 <v-icon class="me-1" color="white">mdi-cog</v-icon>
                 Administración
