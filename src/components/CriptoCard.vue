@@ -28,7 +28,9 @@
               </div>
 
               <v-card-actions class="px-0 pt-3 d-flex justify-space-end align-center border-top">
-
+                  <span class="me-auto fw-bold text-h6">
+                    {{ cryptoPrices[link.id] || 'Cargando...' }}
+                  </span>
                 <v-btn class="fw-bold" color="primary" variant="flat" size="small" :href="link.url_compra"
                   target="_blank" prepend-icon="mdi-cart-arrow-right" :disabled="!link.activo">
 
@@ -50,13 +52,115 @@
 </template>
 
 <script>
+import {ref,watch,onMounted} from 'vue';
+
+const symbolToCoingeckoId = {
+  'BTC': 'bitcoin',
+  'ETH': 'ethereum',
+  'LTC': 'litecoin',
+  'DOGE': 'dogecoin',
+  'XRP': 'ripple',
+  'USDC': 'usd-coin',
+  'BNB': 'binancecoin',
+  'TRX': 'tron',
+  'STETH': 'staked-ether',
+  'USDT': 'tether',
+  'SOL': 'solana',
+
+};
+
+
 export default {
   name: 'CriptoCard',
   props: {
     links: { type: Array, required: true },
     currentEmail: { type: String, required: false, default: '' }
   },
-}
+  setup(props) {
+    // Objeto reactivo para almacenar los precios: { link_id: 'Precio Formateado' }
+    const cryptoPrices = ref({}); 
+
+    // Función principal para cargar los precios de la API
+    const loadPrices = async () => {
+      cryptoPrices.value = {}; // Limpiar estado
+
+      const activeLinks = props.links.filter(l => l.activo);
+      
+      // 2. Recolectar todos los IDs de CoinGecko únicos necesarios
+      const coingeckoIds = activeLinks
+        .map(link => symbolToCoingeckoId[link.simbolo.toUpperCase()])
+        .filter(id => id); // Filtrar IDs no encontrados en el mapa
+      
+      if (coingeckoIds.length === 0) {
+        console.warn("No se encontraron IDs de CoinGecko mapeados para los enlaces activos.");
+        return;
+      }
+
+      const idsString = coingeckoIds.join(','); // Unir IDs para la solicitud por lotes (batch)
+
+      try {
+        // 3. Solicitud por lotes a la API de CoinGecko
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${idsString}&vs_currencies=usd`
+        );
+        
+        if (!response.ok) {
+          throw new Error(`Fallo en la API de CoinGecko: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // 4. Procesar la respuesta y actualizar el estado
+        for (const link of activeLinks) {
+          const coingeckoId = symbolToCoingeckoId[link.simbolo.toUpperCase()];
+
+          if (coingeckoId && data[coingeckoId] && data[coingeckoId].usd) {
+            const price = data[coingeckoId].usd;
+            
+            // Formatear el precio a USD (ajustando decimales para precios pequeños)
+            const formattedPrice = new Intl.NumberFormat('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: price < 1 ? 6 : 2 
+            }).format(price);
+            
+            cryptoPrices.value[link.id] = formattedPrice;
+          } else {
+            cryptoPrices.value[link.id] = 'N/A';
+          }
+        }
+
+      } catch (error) {
+        console.error("Error al cargar precios de criptomonedas:", error);
+        // Mostrar un error en la tarjeta si falla la API
+        for (const link of activeLinks) {
+          cryptoPrices.value[link.id] = 'Error API';
+        }
+      }
+    };
+
+    watch(
+      () => props.links, 
+      (newLinks) => {
+        // Ejecuta loadPrices solo si hay enlaces activos para evitar la advertencia
+        if (newLinks && newLinks.some(l => l.activo)) { 
+          loadPrices();
+        }
+      },
+      { immediate: true } // Ejecutar inmediatamente para la carga inicial (si ya hay datos en la prop)
+    );
+    // Opcional: Refrescar los precios cada 60 segundos
+    // setInterval(loadPrices, 60000); 
+    setInterval(loadPrices, 60000);
+    
+    
+
+    return {
+      cryptoPrices,
+    };
+  }
+};
 </script>
 
 <style scoped>
