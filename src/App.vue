@@ -4,17 +4,20 @@
     <v-main>
       <RouterView />
     </v-main>
+    <FooterC />
   </v-app>
 </template>
 
 <script>
 import NavBar from './components/NavBar.vue'
+import FooterC from './components/FooterC.vue'
 import { useAuthStore } from '@/stores/authStore'
 
 export default {
   name: 'App',
   components: {
-    NavBar
+    NavBar,
+    FooterC
   },
   computed: {
     showNavBar() {
