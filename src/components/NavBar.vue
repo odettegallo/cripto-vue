@@ -6,7 +6,7 @@
 
           <v-app-bar-nav-icon class="d-lg-none text-white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-          <RouterLink class="navbar-brand fw-bold text-white text-decoration-none d-flex align-center" to="/">
+          <RouterLink class="navbar-brand fw-bold text-white text-decoration-none d-flex align-center" to="/home">
             <v-icon class="me-2" color="white">mdi-currency-btc</v-icon>
             Crypto Portal
           </RouterLink>
