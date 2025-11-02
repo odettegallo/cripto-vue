@@ -1,12 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
-import RegistroView from '../views/RegistroView.vue'
-import HomeView from '../views/HomeView.vue'
-import AdminView from '../views/AdminView.vue'
-import EditarCriptoView from '../views/EditarCriptoView.vue'
 import { useAuthStore } from '@/stores/authStore';
-import CriptoEnlaces from '@/views/CriptoEnlacesView.vue'
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -17,7 +10,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: LoginView,
+      component: () => import('@/views/LoginView.vue'),
       meta: { 
         requiresAuth: false,
         title: 'Iniciar Sesión - Coin App'
@@ -26,7 +19,7 @@ const router = createRouter({
     {
       path: '/registro',
       name: 'Registro',
-      component: RegistroView,
+      component: () => import('@/views/RegistroView.vue'),
       meta: { 
         requiresAuth: false,
         title: 'Crear Cuenta - Coin App'
@@ -35,7 +28,7 @@ const router = createRouter({
     {
       path: '/home',
       name: 'Home',
-      component: HomeView,
+      component: () => import('@/views/HomeView.vue'),
       meta: { 
         requiresAuth: true,
         title: 'Inicio - Coin App'
@@ -44,12 +37,12 @@ const router = createRouter({
     {
      path: '/enlaces',
      name: 'Enlaces',
-     component: CriptoEnlaces,
+     component: () => import('@/views/CriptoEnlacesView.vue'),
     },
     {
       path: '/admin',
       name: 'Admin',
-      component: AdminView,
+      component: () => import('@/views/AdminView.vue'),
       meta: { 
         requiresAuth: true,
         title: 'Administración - Coin App'
@@ -58,7 +51,7 @@ const router = createRouter({
     {
       path: '/editar-cripto/:id?',
       name: 'EditarCripto',
-      component: EditarCriptoView,
+      component: () => import('@/views/EditarCriptoView.vue'),
       meta: { 
         requiresAuth: true,
         title: 'Editar Link - Coin App'
