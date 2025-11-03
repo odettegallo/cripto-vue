@@ -63,4 +63,7 @@ export const useCartStore = defineStore('cart', () => {
     decreaseQuantity,
     setNotification
   };
-});
+},{  persist: true,
+},   
+);
+
