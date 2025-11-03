@@ -89,7 +89,9 @@
           Admin
         </v-btn>
         
-        <v-btn 
+
+      </div>
+      <v-btn 
           v-if="!authStore.isAdmin"
           icon 
           :to="{ name: 'Carrito' }" 
@@ -114,8 +116,6 @@
         >
           <v-icon>mdi-logout</v-icon>
         </v-btn>
-      </div>
-      
     </v-app-bar>
 
     <v-snackbar 
