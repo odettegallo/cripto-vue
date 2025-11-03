@@ -19,7 +19,7 @@
       </v-list>
       
       <template v-slot:append>
-        <div class="pa-2 d-flex justify-center">
+        <div class="pa-2 d-flex justify-center" v-if="!authStore.isAdmin">
           <v-btn icon :to="{ name: 'Carrito' }" class="mx-1" variant="flat">
             <v-badge 
               :content="cartStore.cartCount" 
