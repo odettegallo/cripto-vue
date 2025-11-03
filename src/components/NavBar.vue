@@ -8,11 +8,17 @@
       color="surface"
     >
       <v-list nav>
-        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Home' }" prepend-icon="mdi-home" title="Inicio"></v-list-item>
-        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Enlaces' }" prepend-icon="mdi-link" title="Cripto Enlaces"></v-list-item>
-        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Carrito' }" prepend-icon="mdi-cart" title="Carrito"></v-list-item>
-        <v-list-item v-if="authStore.isAdmin" :to="{ name: 'Admin' }" prepend-icon="mdi-security" title="Admin" class="text-secondary"></v-list-item>
         
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Home' }" prepend-icon="mdi-home" title="Inicio" @click="drawer =false"></v-list-item>
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Enlaces' }" prepend-icon="mdi-link" title="Cripto Enlaces" @click="drawer =false"></v-list-item>
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Carrito' }" prepend-icon="mdi-cart" title="Carrito" @click="drawer =false"></v-list-item>
+        <v-list-item v-if="authStore.isAdmin" :to="{ name: 'Admin' }" prepend-icon="mdi-security" title="Admin" class="text-secondary" @click="drawer =false"></v-list-item>
+        <v-list-item 
+          @click="drawer = false" 
+          prepend-icon="mdi-close" 
+          title="Cerrar Menú" 
+          class="text-error mb-2 d-md-none"
+        ></v-list-item>
         <v-divider></v-divider>
         
         <v-list-item @click="authStore.logoutUser" prepend-icon="mdi-logout" title="Cerrar Sesión" class="text-error"></v-list-item>
