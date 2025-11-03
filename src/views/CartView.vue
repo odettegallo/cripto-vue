@@ -126,17 +126,13 @@ import { useCartStore } from '@/stores/cartStore';
 
 const cartStore = useCartStore();
 
-// Definición de las cabeceras de la tabla
 const headers = ref([
     { title: 'Ítem', align: 'start', key: 'item' },
     { title: 'Precio Unitario', align: 'end', key: 'priceUnit', width: '120px' },
-    // Usamos el 'key' 'cantidad' para enlazar con el slot
     { title: 'Cantidad', align: 'center', key: 'cantidad', width: '180px' }, 
-    // Usamos un key inventado 'subtotal' para el slot de cálculo
     { title: 'Subtotal', align: 'end', key: 'subtotal', width: '120px' }, 
 ]);
 
-// Función de utilidad para formato de moneda (sin cambios)
 const formatCurrency = (value) => {
     if (value === null || value === undefined) return '$0.00';
     
@@ -144,21 +140,18 @@ const formatCurrency = (value) => {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,
-        // Ajustar la precisión para precios muy bajos
         maximumFractionDigits: value < 1 ? 6 : 2, 
     }).format(value);
 };
 </script>
 
 <style scoped>
-/* Estilos basados en la estética Cripto */
 .cripto-card-luxury {
   background-color: #1a1a1a !important; 
   border: 1px solid rgba(255, 215, 0, 0.3);
   border-radius: 12px;
 }
 
-/* Replicar la clase de gradiente del App.vue */
 .text-gradient {
   background: linear-gradient(135deg, #FFD700 0%, #00FFFF 100%);
   -webkit-background-clip: text;
