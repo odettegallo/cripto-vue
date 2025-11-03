@@ -84,6 +84,7 @@
         </v-btn>
         
         <v-btn 
+          v-if="!authStore.isAdmin"
           icon 
           :to="{ name: 'Carrito' }" 
           class="mx-1"
