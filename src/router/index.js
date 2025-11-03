@@ -52,6 +52,15 @@ const router = createRouter({
       }
     },
     {
+      path: '/carrito',
+      name: 'Carrito',
+      component: () => import('@/views/CartView.vue'),
+      meta: { 
+        requiresAuth: true,
+        title: 'Carrito de Compras - Coin App'
+      }
+    },
+    {
       path: '/editar-cripto/:id?',
       name: 'EditarCripto',
       component: () => import('@/views/EditarCriptoView.vue'),

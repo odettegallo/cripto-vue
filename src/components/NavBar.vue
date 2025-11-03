@@ -30,6 +30,19 @@
 
           <div class="d-flex align-center">
             <template v-if="isAuthenticated">
+              <v-btn 
+                class="me-3" 
+                icon 
+                variant="flat" 
+                color="secondary" 
+                size="small"
+                @click="openCart"
+              >
+                <v-badge :content="cartCount" color="error" v-if="cartCount > 0">
+                  <v-icon>mdi-cart</v-icon>
+                </v-badge>
+                <v-icon v-else>mdi-cart-outline</v-icon>
+              </v-btn>
               <span class="navbar-text me-3 d-none d-md-inline text-white fw-bold">
                 <v-icon color="white" size="18" class="me-1">mdi-account-circle</v-icon>
                 {{ userEmail }}
@@ -47,6 +60,15 @@
         </div>
       </v-container>
     </v-app-bar>
+    <v-snackbar
+      v-model="showNotification"
+      :timeout="3000"
+      color="success"
+      location="top right"
+      variant="tonal"
+    >
+      {{ notificationMessage }}
+    </v-snackbar>
 
     <v-navigation-drawer v-model="drawer" temporary>
       <v-list dense nav>
@@ -74,13 +96,48 @@
 
 <script>
 import { useAuthStore } from '@/stores/authStore';
+import { useCartStore } from '@/stores/cartStore';
 import { mapState, mapActions } from 'pinia';
+import { ref, computed, watch } from 'vue';
+import router from '@/router';
 
 export default {
   name: 'NavBar',
   data: () => ({
     drawer: false,
+    showNotification: false,
+    notificationMessage: '',
   }),
+  setup() {
+    const cartStore = useCartStore();
+
+    const cartCount = computed(() => cartStore.totalUnits);
+    const showNotification = ref(false);
+    const notificationMessage = ref('');
+
+    watch(() => cartStore.notification, (newVal) => {
+      if (newVal) {
+        notificationMessage.value = newVal;
+        showNotification.value = true;
+        
+      }
+    });
+
+    return {
+      cartCount,
+      showNotification,
+      notificationMessage,
+      openCart: () => {
+        router.push('/carrito');
+        if (cartStore.totalUnits > 0) {
+          cartStore.openCart();
+        } else {
+          notificationMessage.value = 'El carrito está vacío.';
+          showNotification.value = true;
+        }},
+    };
+      },
+
   computed: {
     ...mapState(useAuthStore, {
       isAuthenticated: 'isLoggedIn',
@@ -99,6 +156,7 @@ export default {
     }
   }
 }
+  
 </script>
 
 <style scoped>

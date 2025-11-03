@@ -31,10 +31,10 @@
                   <span class="me-auto fw-bold text-h6">
                     {{ cryptoPrices[link.id] || 'Cargando...' }}
                   </span>
-                <v-btn class="fw-bold" color="primary" variant="flat" size="small" :href="link.url_compra"
-                  target="_blank" prepend-icon="mdi-cart-arrow-right" :disabled="!link.activo">
+                <v-btn class="fw-bold" color="primary" variant="flat" size="small" @click="handleAddToCart(link)" :href="link.url_afiliado"
+                  target="_blank" prepend-icon="mdi-cart-plus" :disabled="!link.activo">
 
-                  Comprar Ahora
+                  Agregar al Carrito
 
                 </v-btn>
 
@@ -53,6 +53,7 @@
 
 <script>
 import {ref,watch,onMounted} from 'vue';
+import {useCartStore} from '@/stores/cartStore';
 
 const symbolToCoingeckoId = {
   'BTC': 'bitcoin',
@@ -78,7 +79,12 @@ export default {
   },
   setup(props) {
     // Objeto reactivo para almacenar los precios: { link_id: 'Precio Formateado' }
-    const cryptoPrices = ref({}); 
+    const cryptoPrices = ref({});
+    const cartStore = useCartStore(); 
+
+    const handleAddToCart = (link) => {
+      cartStore.addToCart(link);
+    };
 
     // Función principal para cargar los precios de la API
     const loadPrices = async () => {
@@ -158,6 +164,7 @@ export default {
 
     return {
       cryptoPrices,
+      handleAddToCart
     };
   }
 };
