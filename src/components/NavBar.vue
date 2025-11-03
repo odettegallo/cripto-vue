@@ -1,238 +1,167 @@
 <template>
   <div>
-    <v-app-bar class="bg-black" elevation="2">
-      <v-container>
-        <div class="d-flex align-center w-100">
-
-          <v-app-bar-nav-icon class="d-lg-none text-white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-          <RouterLink class="navbar-brand fw-bold text-white text-decoration-none d-flex align-center" to="/home">
-            <v-icon class="me-2" color="white">mdi-currency-btc</v-icon>
-            Crypto Portal
-          </RouterLink>
-
-          <div class="d-none d-lg-flex align-center ms-6" v-if="isAuthenticated">
-              <RouterLink class="nav-link text-white text-decoration-none" to="/home">
-                <v-icon class="me-1" color="white">mdi-home</v-icon>
-                Inicio
-              </RouterLink>
-              <RouterLink v-if="isAdmin" class="nav-link text-white text-decoration-none" to="/enlaces">
-                <v-icon class="me-1" color="white">mdi-link</v-icon>
-                Cripto Enlaces
-              </RouterLink>
-              <RouterLink v-if="isAdmin" class="nav-link text-white text-decoration-none ms-4" to="/admin">
-                <v-icon class="me-1" color="white">mdi-cog</v-icon>
-                Administración
-              </RouterLink>
-          </div>
-
-          <v-spacer />
-
-          <div class="d-flex align-center">
-            <template v-if="isAuthenticated">
-              <v-btn 
-                class="me-3" 
-                icon 
-                variant="flat" 
-                color="secondary" 
-                size="small"
-                @click="openCart"
-              >
-                <v-badge :content="cartCount" color="error" v-if="cartCount > 0">
-                  <v-icon>mdi-cart</v-icon>
-                </v-badge>
-                <v-icon v-else>mdi-cart-outline</v-icon>
-              </v-btn>
-              <span class="navbar-text me-3 d-none d-md-inline text-white fw-bold">
-                <v-icon color="white" size="18" class="me-1">mdi-account-circle</v-icon>
-                {{ userEmail }}
-              </span>
-              <v-btn class="text-white" variant="outlined" size="small" @click="handleLogout" prepend-icon="mdi-logout">
-                Cerrar Sesión
-              </v-btn>
-            </template>
-            <template v-else>
-               <v-btn class="text-white" variant="outlined" size="small" to="/login" prepend-icon="mdi-login">
-                Ingresar
-              </v-btn>
-            </template>
-          </div>
+    <v-navigation-drawer
+      v-model="drawer"
+      app
+      temporary
+      location="left"
+      color="surface"
+    >
+      <v-list nav>
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Home' }" prepend-icon="mdi-home" title="Inicio"></v-list-item>
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Enlaces' }" prepend-icon="mdi-link" title="Cripto Enlaces"></v-list-item>
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Carrito' }" prepend-icon="mdi-cart" title="Carrito"></v-list-item>
+        <v-list-item v-if="authStore.isAdmin" :to="{ name: 'Admin' }" prepend-icon="mdi-security" title="Admin" class="text-secondary"></v-list-item>
+        
+        <v-divider></v-divider>
+        
+        <v-list-item @click="authStore.logoutUser" prepend-icon="mdi-logout" title="Cerrar Sesión" class="text-error"></v-list-item>
+      </v-list>
+      
+      <template v-slot:append>
+        <div class="pa-2 d-flex justify-center">
+          <v-btn icon :to="{ name: 'Carrito' }" class="mx-1" variant="flat">
+            <v-badge 
+              :content="cartStore.cartCount" 
+              :value="cartStore.cartCount" 
+              color="primary" 
+              overlap
+            >
+              <v-icon>mdi-cart</v-icon>
+            </v-badge>
+          </v-btn>
         </div>
-      </v-container>
+      </template>
+
+    </v-navigation-drawer>
+
+    <v-app-bar 
+      app 
+      dark 
+      color="surface" 
+      elevation="4"
+      class="px-lg-12"
+    >
+      <v-app-bar-nav-icon class="d-md-none" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+
+      <RouterLink class="navbar-brand fw-bold text-white text-decoration-none d-flex align-center" to="/home">
+              <v-icon class="me-2" color="white">mdi-currency-btc</v-icon>
+              Crypto Portal
+            </RouterLink>
+
+      <v-spacer></v-spacer>
+
+      <div class="d-none d-md-flex align-center">
+        <v-btn 
+          v-if="!authStore.isAdmin" 
+          text 
+          :to="{ name: 'Home' }" 
+          class="text-caption mx-1"
+        >
+          <v-icon left>mdi-home</v-icon>
+          Inicio
+        </v-btn>
+        
+        <v-btn 
+          v-if="!authStore.isAdmin" 
+          text 
+          :to="{ name: 'Enlaces' }" 
+          class="text-caption mx-1"
+        >
+          <v-icon left>mdi-link</v-icon>
+          Cripto Enlaces
+        </v-btn>
+        
+        <v-btn 
+          v-if="authStore.isAdmin" 
+          text 
+          :to="{ name: 'Admin' }" 
+          class="text-caption mx-1"
+          color="secondary"
+        >
+          <v-icon left>mdi-security</v-icon>
+          Admin
+        </v-btn>
+        
+        <v-btn 
+          icon 
+          :to="{ name: 'Carrito' }" 
+          class="mx-1"
+        >
+          <v-badge 
+            :content="cartStore.cartCount" 
+            :value="cartStore.cartCount" 
+            color="primary" 
+            overlap
+          >
+            <v-icon>mdi-cart</v-icon>
+          </v-badge>
+        </v-btn>
+
+        <v-btn 
+          icon 
+          @click="authStore.logoutUser" 
+          class="ml-2"
+          color="error"
+          title="Cerrar Sesión"
+        >
+          <v-icon>mdi-logout</v-icon>
+        </v-btn>
+      </div>
+      
     </v-app-bar>
-    <v-snackbar
+
+    <v-snackbar 
       v-model="showNotification"
       :timeout="3000"
-      color="success"
-      location="top right"
-      variant="tonal"
+      color="primary"
+      elevation="24"
+      top
     >
-      {{ notificationMessage }}
+      <span class="fw-bold">{{ cartStore.notification }}</span>
+      <template v-slot:actions>
+        <v-btn
+          color="white"
+          variant="text"
+          @click="cartStore.setNotification(null)"
+        >
+          Cerrar
+        </v-btn>
+      </template>
     </v-snackbar>
-
-    <v-navigation-drawer v-model="drawer" temporary>
-      <v-list dense nav>
-        <v-list-item class="bg-purple mb-3">
-          <v-list-item-title class="fw-bold text-white">
-            <v-icon class="me-2" color="white">mdi-currency-btc</v-icon> Crypto Portal
-          </v-list-item-title>
-        </v-list-item>
-        
-        <v-list-item prepend-icon="mdi-home" title="Inicio" to="/home" @click="drawer = false" />
-        <v-list-item v-if="isAdmin" prepend-icon="mdi-link" title="Cripto Enlaces" to="/enlaces" @click="drawer = false" />
-        
-        <v-list-item v-if="isAdmin" prepend-icon="mdi-cog" title="Administración" to="/admin" @click="drawer = false" />
-        
-        <v-list-item v-if="isAuthenticated" prepend-icon="mdi-logout" title="Cerrar Sesión" @click="handleLogout" />
-        <v-list-item v-else prepend-icon="mdi-login" title="Ingresar" to="/login" @click="drawer = false" />
-        
-        <v-list-item v-if="isAuthenticated">
-            <v-list-item-title class="text-muted text-caption mt-2">Usuario: {{ userEmail }}</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
   </div>
 </template>
 
-<script>
+<script setup>
+import { computed, ref } from 'vue'; // Importar 'ref'
 import { useAuthStore } from '@/stores/authStore';
 import { useCartStore } from '@/stores/cartStore';
-import { mapState, mapActions } from 'pinia';
-import { ref, computed, watch } from 'vue';
-import router from '@/router';
 
-export default {
-  name: 'NavBar',
-  data: () => ({
-    drawer: false,
-    showNotification: false,
-    notificationMessage: '',
-  }),
-  setup() {
-    const cartStore = useCartStore();
+// 1. Estado para el Navigation Drawer
+const drawer = ref(false); // Nuevo estado
 
-    const cartCount = computed(() => cartStore.totalUnits);
-    const showNotification = ref(false);
-    const notificationMessage = ref('');
+// 2. Inicializar Stores
+const authStore = useAuthStore();
+const cartStore = useCartStore();
 
-    watch(() => cartStore.notification, (newVal) => {
-      if (newVal) {
-        notificationMessage.value = newVal;
-        showNotification.value = true;
-        
-      }
-    });
-
-    return {
-      cartCount,
-      showNotification,
-      notificationMessage,
-      openCart: () => {
-        router.push('/carrito');
-        if (cartStore.totalUnits > 0) {
-          cartStore.openCart();
-        } else {
-          notificationMessage.value = 'El carrito está vacío.';
-          showNotification.value = true;
-        }},
-    };
-      },
-
-  computed: {
-    ...mapState(useAuthStore, {
-      isAuthenticated: 'isLoggedIn',
-      userEmail: 'currentUserEmail', 
-      isAdmin: 'isAdmin'
-    }),
-    userName() {
-      return this.userEmail ? this.userEmail.split('@')[0] : '';
-    }
-  },
-  methods: {
-    ...mapActions(useAuthStore, ['logoutUser']),
-    handleLogout() {
-      this.drawer = false;
-      this.logoutUser();
+// 3. Controlar la visibilidad de la notificación
+const showNotification = computed({
+  get: () => !!cartStore.notification,
+  set: (val) => {
+    if (!val) {
+      cartStore.setNotification(null);
     }
   }
-}
-  
+});
 </script>
 
 <style scoped>
-/* 1. Barra de Aplicación: Estilo de Lujo Oscuro */
-.app-bar-luxury {
-  /* Fondo muy oscuro (background) */
-  background-color: var(--v-theme-background) !important;
-  /* Borde inferior sutil de neón/oro */
-  border-bottom: 2px solid rgba(255, 215, 0, 0.2); 
-  /* Sombra más dramática */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+/* Estilos existentes */
+.text-gradient {
+  background: linear-gradient(135deg, #FFD700 0%, #00FFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
-
-/* 2. Logo */
-.navbar-brand {
-  font-size: 1.6rem;
-  letter-spacing: 1px;
-  font-weight: 700 !important;
-  /* Icono con animación de pulso */
-}
-.logo-icon {
-    animation: pulseNeon 1.5s infinite alternate;
-}
-
-/* 3. Links de Navegación */
-.nav-link {
-  font-weight: 600;
-  transition: all 0.3s ease;
-  padding: 8px 12px; 
-  border-radius: 6px;
-  color: #A0A0A0 !important; /* Color base gris sutil */
-}
-/* Efecto hover: Resplandor con color principal (Gold) */
-.nav-link:hover {
-  background: rgba(255, 215, 0, 0.1); 
-  color: var(--v-theme-primary) !important;
-  box-shadow: 0 0 5px rgba(255, 215, 0, 0.4);
-}
-/* Link Activo: Resaltado con color secundario (Neon) */
-.nav-link.router-link-active {
-    color: var(--v-theme-secondary) !important;
-    border-bottom: 2px solid var(--v-theme-secondary);
-}
-
-/* 4. Botones */
-/* Botón de Logout: Outline Neón */
-.btn-neon-outline {
-    color: var(--v-theme-secondary) !important;
-    border-color: var(--v-theme-secondary) !important;
-    transition: all 0.3s ease;
-}
-.btn-neon-outline:hover {
-    background-color: rgba(0, 255, 255, 0.1) !important;
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-}
-/* Botón de Login: Relleno Gold */
-.btn-gold-flat {
-    background-color: var(--v-theme-primary) !important;
-    color: #000 !important; /* Texto negro para contraste en oro */
-    font-weight: 700;
-    transition: all 0.3s ease;
-}
-.btn-gold-flat:hover {
-    background-color: #ffe033 !important; /* Dorado más claro */
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-}
-
-/* 5. Drawer de Navegación */
-.nav-drawer-dark {
-    background-color: var(--v-theme-surface) !important; /* Color de superficie oscuro */
-}
-
-/* Keyframe para el logo */
-@keyframes pulseNeon {
-  0% { transform: scale(1); filter: drop-shadow(0 0 1px var(--v-theme-secondary)); }
-  50% { transform: scale(1.05); filter: drop-shadow(0 0 8px var(--v-theme-secondary)); }
-  100% { transform: scale(1); filter: drop-shadow(0 0 1px var(--v-theme-secondary)); }
-}
+.fw-bold { font-weight: bold; }
 </style>

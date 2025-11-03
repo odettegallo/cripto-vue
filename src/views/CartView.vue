@@ -79,7 +79,7 @@
 
           <div v-if="cartStore.cartCount > 0" class="d-flex justify-end mt-4">
             <v-btn color="success" size="large" prepend-icon="mdi-cash-register" class="fw-bold">
-              Proceder al Pago (Simulado)
+              Proceder al Pago
             </v-btn>
           </div>
           
