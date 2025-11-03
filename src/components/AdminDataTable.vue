@@ -130,7 +130,6 @@
 
 <script>
 import { mapState, mapActions } from 'pinia';
-// ADAPTACIÓN: Importar useDataStore
 import { useDataStore } from '@/stores/dataStore'; 
 
 export default {
@@ -141,7 +140,6 @@ export default {
       searchTerm: '',
       filterStatus: '',
       statuses: [true, false], 
-      // ADAPTACIÓN: Estructura de datos para nuevos enlaces
       newLink: { 
         nombre: '', simbolo: '', url_compra: '', descripcion: '', url_imagen: '', activo: true
       },
@@ -152,12 +150,10 @@ export default {
   },
   
   computed: {
-    // ADAPTACIÓN: Se cambia useCoursesStore por useDataStore y allCourses por allLinks
     ...mapState(useDataStore, {
       allLinks: 'getLinks',
     }),
     
-    // Lista de ítems para el v-select de estado
     statusItems() {
       return [
         { text: 'Todos', value: '' },
@@ -166,9 +162,7 @@ export default {
       ];
     },
 
-    // Validación simple
     isNewLinkValid() {
-      // ADAPTACIÓN: Validar campos de enlace
       return this.newLink.nombre && this.newLink.simbolo && this.newLink.url_compra && this.newLink.descripcion;
     },
 
@@ -180,7 +174,6 @@ export default {
             ) 
           : true;
         
-        // ADAPTACIÓN: Filtrar por la propiedad 'activo'
         const matchesStatus = this.filterStatus !== ''
           ? link.activo === this.filterStatus 
           : true;
@@ -191,7 +184,6 @@ export default {
   },
   
   methods: {
-    // ADAPTACIÓN: Se cambian las acciones a addLink y deleteLink
     ...mapActions(useDataStore, ['addLink', 'deleteLink']),
 
     showAlert(message, type = 'alert-success') {
@@ -206,7 +198,6 @@ export default {
 
     openAddModal() {
       this.clearAlert();
-      // Resetear el formulario al abrir con valores por defecto
       this.newLink = { nombre: '', simbolo: '', url_compra: '', descripcion: '', url_imagen: '', activo: true };
       this.addModalOpen = true;
     },
@@ -224,7 +215,6 @@ export default {
 
       if (confirmAdd) {
         const linkData = {
-          // ADAPTACIÓN: Mapeo de datos al schema de Firestore
           nombre: this.newLink.nombre.trim(),
           simbolo: this.newLink.simbolo.trim(),
           url_compra: this.newLink.url_compra.trim(),
@@ -245,7 +235,6 @@ export default {
     },
 
     editLinkRedirect(link) {
-      // ADAPTACIÓN: Se cambia el nombre de la ruta a 'EditarCripto'
       this.$router.push({ name: 'EditarCripto', params: { id: link.id } });
     },
 
@@ -255,7 +244,6 @@ export default {
       const confirmDelete = window.confirm(`⚠️ ¿Desea realmente eliminar el enlace de "${link.nombre}"? Esta acción es irreversible.`);
       
       if (confirmDelete) {
-        // ADAPTACIÓN: Llamada a deleteLink
         const result = await this.deleteLink(link.id);
         
         if (result.success) {
@@ -271,5 +259,4 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos adaptados */
 </style>

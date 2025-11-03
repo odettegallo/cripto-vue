@@ -57,37 +57,29 @@
 
 <script>
 import { useRoute, useRouter } from 'vue-router';
-// Renombrar la importación del store
 import { useDataStore } from '@/stores/dataStore'; 
 import { computed, ref, watchEffect } from 'vue';
 
 export default {
-  // Renombrar la vista
   name: 'EditarCriptoView', 
   setup() {
     const route = useRoute();
     const router = useRouter();
-    // Renombrar la variable del store
     const store = useDataStore(); 
     
-    // Variables renombradas
     const linkCache = ref({});
     const linkId = route.params.id;
 
     const alertMessage = ref('');
     const alertType = ref('');
 
-    // Busca el enlace en el store
     const link = computed(() => {
-      // Renombrar el getter
       return store.getLinks.find(c => c.id === linkId); 
     });
 
-    // Carga los datos al iniciar o cuando el enlace se actualiza
     watchEffect(() => {
       if (link.value) {
-        linkCache.value = JSON.parse(JSON.stringify(link.value)); // Clonar para edición
-        // Asegurar que el booleano 'activo' se mantenga
+        linkCache.value = JSON.parse(JSON.stringify(link.value));
         linkCache.value.activo = link.value.activo === 'true' || link.value.activo === true;
       }
     });
@@ -95,11 +87,9 @@ export default {
     const showAlert = (message, type = 'alert-success') => { /* ... */ };
     const clearAlert = () => { /* ... */ };
 
-    // Función renombrada
     const updateLinkWithConfirmation = async () => {
       clearAlert();
       
-      // Adaptar la estructura de datos a la colección 'enlaces_criptos'
       const updatedData = {
         id: linkCache.value.id.trim(),
         nombre: linkCache.value.nombre.trim(),
@@ -107,14 +97,12 @@ export default {
         url_compra: linkCache.value.url_compra.trim(),
         url_imagen: linkCache.value.url_imagen.trim(),
         descripcion: linkCache.value.descripcion.trim(),
-        activo: linkCache.value.activo === true, // Asegurar que sea un booleano
+        activo: linkCache.value.activo === true, 
       };
 
-      // Renombrar la action
       const result = await store.updateLink(linkId, updatedData);
 
       if (result.success) {
-        // Texto adaptado
         showAlert(`✅ Enlace "${linkCache.value.nombre}" actualizado correctamente. Redirigiendo...`, 'alert-success');
         
         setTimeout(() => {
@@ -122,13 +110,11 @@ export default {
         }, 1500);
 
       } else {
-        // Texto adaptado
         showAlert(`❌ Error al actualizar enlace: ${result.error}`, 'alert-danger');
       }
     };
     
     return {
-      // Variables renombradas
       linkCache,
       link, 
       loading: computed(() => store.loading),
