@@ -133,7 +133,7 @@ import { mapState, mapActions } from 'pinia';
 import { useDataStore } from '@/stores/dataStore'; 
 
 export default {
-  name: 'AdminLinksManager', // Nombre adaptado
+  name: 'AdminLinksManager',
   
   data() {
     return {
