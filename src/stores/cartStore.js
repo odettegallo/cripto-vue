@@ -8,8 +8,9 @@ export const useCartStore = defineStore('cart', () => {
 
   const cartCount = computed(() => cartItems.value.length);
   const totalUnits = computed(() => cartItems.value.reduce((total, item) => total + item.cantidad, 0));
+  
 
-  function addToCart(link) {
+  function addToCart(link, priceUnit) {
     const existingItem = cartItems.value.find(item => item.linkId === link.id);
 
     if (existingItem) {
@@ -22,11 +23,18 @@ export const useCartStore = defineStore('cart', () => {
         simbolo: link.simbolo,
         url_imagen: link.url_imagen,
         cantidad: 1,
+        priceUnit: priceUnit,
       });
       setNotification(`${link.nombre} agregado al carrito.`);
     }
   }
   
+  const cartTotal = computed(() => {
+    const total = cartItems.value.reduce((total, item) => total + (item.cantidad * item.priceUnit), 0);
+    return Math.round(total * 100) / 100;
+  });
+
+
   function increaseQuantity(linkId) {
     const item = cartItems.value.find(item => item.linkId === linkId);
     if (item) {
@@ -53,15 +61,26 @@ export const useCartStore = defineStore('cart', () => {
     }, 3000);
   }
 
+  function checkout() {
+    if (cartItems.value.length > 0) {
+      cartItems.value = [];
+      setNotification('Compra realizada con éxito.');
+    }else {
+      setNotification('El carrito está vacío.');
+    }
+  }
+
   return { 
     cartItems, 
     cartCount,
     totalUnits,
+    cartTotal,
     notification,
     addToCart,
     increaseQuantity,
     decreaseQuantity,
-    setNotification
+    setNotification,
+    checkout
   };
 },{  persist: true,
 },   

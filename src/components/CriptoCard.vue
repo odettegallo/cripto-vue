@@ -78,17 +78,28 @@ export default {
     currentEmail: { type: String, required: false, default: '' }
   },
   setup(props) {
-    // Objeto reactivo para almacenar los precios: { link_id: 'Precio Formateado' }
+
     const cryptoPrices = ref({});
+    const cryptoRawPrices = ref({});
     const cartStore = useCartStore(); 
 
     const handleAddToCart = (link) => {
-      cartStore.addToCart(link);
-    };
+      const price = cryptoRawPrices.value[link.id] || 0;
+      if (typeof price === 'number' && price > 0) {
+        cartStore.addToCart(link, price);
+      } else {
+        cartStore.setNotification({
+          type: 'error',
+          message: `No se pudo agregar ${link.nombre} al carrito debido a un precio inválido.`,
+        });
+      }
 
-    // Función principal para cargar los precios de la API
+      };
+
+
     const loadPrices = async () => {
       cryptoPrices.value = {}; // Limpiar estado
+      cryptoRawPrices.value = {};
 
       const activeLinks = props.links.filter(l => l.activo);
       
@@ -122,6 +133,7 @@ export default {
 
           if (coingeckoId && data[coingeckoId] && data[coingeckoId].usd) {
             const price = data[coingeckoId].usd;
+            cryptoRawPrices.value[link.id] = price;
             
             // Formatear el precio a USD (ajustando decimales para precios pequeños)
             const formattedPrice = new Intl.NumberFormat('en-US', {
@@ -134,6 +146,7 @@ export default {
             cryptoPrices.value[link.id] = formattedPrice;
           } else {
             cryptoPrices.value[link.id] = 'N/A';
+            cryptoRawPrices.value[link.id] = null;
           }
         }
 
@@ -142,6 +155,7 @@ export default {
         // Mostrar un error en la tarjeta si falla la API
         for (const link of activeLinks) {
           cryptoPrices.value[link.id] = 'Error API';
+          cryptoRawPrices.value[link.id] = null;
         }
       }
     };
