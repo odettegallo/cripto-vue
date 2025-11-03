@@ -150,9 +150,9 @@ export default {
       },
       { immediate: true } // Ejecutar inmediatamente para la carga inicial (si ya hay datos en la prop)
     );
-    // Opcional: Refrescar los precios cada 60 segundos
-    // setInterval(loadPrices, 60000); 
+    
     setInterval(loadPrices, 60000);
+  
     
     
 

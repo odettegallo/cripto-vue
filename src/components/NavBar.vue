@@ -16,7 +16,7 @@
                 <v-icon class="me-1" color="white">mdi-home</v-icon>
                 Inicio
               </RouterLink>
-              <RouterLink class="nav-link text-white text-decoration-none" to="/enlaces">
+              <RouterLink v-if="isAdmin" class="nav-link text-white text-decoration-none" to="/enlaces">
                 <v-icon class="me-1" color="white">mdi-link</v-icon>
                 Cripto Enlaces
               </RouterLink>
@@ -57,6 +57,7 @@
         </v-list-item>
         
         <v-list-item prepend-icon="mdi-home" title="Inicio" to="/home" @click="drawer = false" />
+        <v-list-item v-if="isAdmin" prepend-icon="mdi-link" title="Cripto Enlaces" to="/enlaces" @click="drawer = false" />
         
         <v-list-item v-if="isAdmin" prepend-icon="mdi-cog" title="Administración" to="/admin" @click="drawer = false" />
         
