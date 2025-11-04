@@ -16,7 +16,7 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue'),
       meta: { 
         requiresAuth: false,
-        title: 'Iniciar Sesión - Coin App'
+        title: 'Iniciar Sesión - Crypto Portal'
       }
     },
     {
@@ -25,7 +25,7 @@ const router = createRouter({
       component: () => import('@/views/RegistroView.vue'),
       meta: { 
         requiresAuth: false,
-        title: 'Crear Cuenta - Coin App'
+        title: 'Crear Cuenta - Crypto Portal'
       }
     },
     {
@@ -34,13 +34,17 @@ const router = createRouter({
       component: () => import('@/views/HomeView.vue'),
       meta: { 
         requiresAuth: true,
-        title: 'Inicio - Coin App'
+        title: 'Inicio - Crypto Portal'
       }
     },
     {
      path: '/enlaces',
      name: 'Enlaces',
      component: () => import('@/views/CriptoEnlacesView.vue'),
+      meta: {
+        requiresAuth: true,
+        title: 'Enlaces Cripto - Crypto Portal'
+      }
     },
     {
       path: '/admin',
@@ -48,7 +52,7 @@ const router = createRouter({
       component: () => import('@/views/AdminView.vue'),
       meta: { 
         requiresAuth: true,
-        title: 'Administración - Coin App'
+        title: 'Administración - Crypto Portal'
       }
     },
     {
@@ -57,7 +61,7 @@ const router = createRouter({
       component: () => import('@/views/CartView.vue'),
       meta: { 
         requiresAuth: true,
-        title: 'Carrito de Compras - Coin App'
+        title: 'Carrito de Compras - Crypto Portal'
       }
     },
     {
@@ -66,7 +70,7 @@ const router = createRouter({
       component: () => import('@/views/EditarCriptoView.vue'),
       meta: { 
         requiresAuth: true,
-        title: 'Editar Link - Coin App'
+        title: 'Editar Link - Crypto Portal'
       }
     },
     {
