@@ -89,7 +89,7 @@ export const useWalletStore = defineStore('wallet', {
                         userId,
                         asset,
                         amount,
-                        pricePerUnit,
+                        priceUnit,
                         totalCost,
                         type: 'compra',
                         timestamp: serverTimestamp(), // Usa timestamp de Firebase
