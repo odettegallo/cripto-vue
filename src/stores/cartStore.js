@@ -1,6 +1,10 @@
 // stores/cartStore.js
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { useAuthStore } from './authStore';
+import { useWalletStore } from './walletStore';
+import router from '@/router';
+
 
 export const useCartStore = defineStore('cart', () => {
   const cartItems = ref([]);
@@ -61,11 +65,33 @@ export const useCartStore = defineStore('cart', () => {
     }, 3000);
   }
 
-  function checkout() {
+  async function checkout() { // Hacemos la función asíncrona
     if (cartItems.value.length > 0) {
-      cartItems.value = [];
-      setNotification('Compra realizada con éxito.');
-    }else {
+      const walletStore = useWalletStore(); 
+      const authStore = useAuthStore();     
+      const userId = authStore.user?.uid;   
+
+      if (!userId) {
+        setNotification('Debes iniciar sesión para proceder al pago.'); 
+        return;
+      }
+      
+      const itemsToCheckout = cartItems.value; 
+      
+      // 1. Llama a la acción de la billetera para procesar la compra
+      const result = await walletStore.processCartCheckout(itemsToCheckout, userId); 
+
+      if (result.success) {
+        // 2. Si la compra fue exitosa, vacía el carrito
+        cartItems.value = [];
+        setNotification('¡Compra exitosa! Verificando tu billetera...');
+        // 3. Redirige a la nueva vista
+        router.push({ name: 'Wallet' }); 
+      } else {
+        setNotification(`Error en el pago: ${result.error}`);
+      }
+
+    } else {
       setNotification('El carrito está vacío.');
     }
   }

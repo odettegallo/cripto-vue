@@ -47,6 +47,15 @@ const router = createRouter({
       }
     },
     {
+     path: '/wallet',
+     name: 'Wallet',
+     component: () => import('@/views/WalletView.vue'),
+      meta: {
+        requiresAuth: true,
+        title: 'Mi Billetera - Crypto Portal'
+      }
+    },
+    {
       path: '/admin',
       name: 'Admin',
       component: () => import('@/views/AdminView.vue'),

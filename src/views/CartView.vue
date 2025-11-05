@@ -90,15 +90,19 @@
         </div>
 
         <div v-if="cartStore.cartCount > 0" class="d-flex justify-end mt-4">
-          <v-btn 
-            color="success" 
-            size="large" 
-            prepend-icon="mdi-cash-register" 
-            class="fw-bold"
-            @click="cartStore.checkout"
-          >
-            Proceder al Pago
-          </v-btn>
+          <v-card-actions class="d-flex justify-end pt-5">
+    <v-btn 
+        @click="cartStore.checkout" 
+        :disabled="cartStore.cartCount === 0"
+        color="primary" 
+        size="large" 
+        elevation="10" 
+        class="text-uppercase font-weight-bold"
+    >
+        <v-icon start>mdi-cash-lock</v-icon>
+        Proceder al Pago
+    </v-btn>
+</v-card-actions>
         </div>
         
       </v-card>

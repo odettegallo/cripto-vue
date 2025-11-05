@@ -11,6 +11,7 @@
         
         <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Home' }" prepend-icon="mdi-home" title="Inicio" @click="drawer =false"></v-list-item>
         <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Enlaces' }" prepend-icon="mdi-link" title="Cripto Enlaces" @click="drawer =false"></v-list-item>
+        <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Wallet' }" prepend-icon="mdi-wallet" title="Mi Billetera" @click="drawer =false"></v-list-item>
         <v-list-item v-if="!authStore.isAdmin" :to="{ name: 'Carrito' }" prepend-icon="mdi-cart" title="Carrito" @click="drawer =false"></v-list-item>
         <v-list-item v-if="authStore.isAdmin" :to="{ name: 'Admin' }" prepend-icon="mdi-security" title="Admin" class="text-secondary" @click="drawer =false"></v-list-item>
         <v-list-item 
@@ -76,6 +77,16 @@
         >
           <v-icon left>mdi-link</v-icon>
           Cripto Enlaces
+        </v-btn>
+
+        <v-btn 
+          v-if="!authStore.isAdmin" 
+          text 
+          :to="{ name: 'Wallet' }" 
+          class="text-caption mx-1"
+        >
+          <v-icon left>mdi-wallet</v-icon>
+          Mi Billetera
         </v-btn>
         
         <v-btn 
