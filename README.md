@@ -2,6 +2,12 @@
 
 Este proyecto es el resultado del trabajo final del Bootcamp, desarrollado con un enfoque modular, escalable y centrado en la experiencia de usuario. Utiliza el ecosistema moderno de Vue 3, Vuetify y Firebase para construir una SPA robusta, con gestión de estado persistente, rutas protegidas y pruebas automatizadas.
 
+## 🚧 Estado del Proyecto
+
+Se están agregando nuevas funcionalidades que aún se encuentran en construcción.  
+Este proyecto está en desarrollo activo, por lo que algunas secciones pueden estar incompletas o sujetas a cambios.
+
+
 ## 🚀 Tecnologías y dependencias principales
 
 | Herramienta | Descripción |
@@ -19,7 +25,7 @@ Este proyecto es el resultado del trabajo final del Bootcamp, desarrollado con u
 ## 📦 Instalación
 
 ```bash
-git clone https://github.com/tu-usuario/tu-repo.git
+git clone https://github.com/odettegallo/cripto-vue.git
 cd tu-repo
 npm install
 ```
@@ -47,7 +53,7 @@ npm run test        # Ejecuta pruebas con Vitest
 src/
 ├── assets/           # Recursos estáticos
 ├── components/       # Componentes reutilizables
-├── composables/      # Lógica reutilizable (composables)
+├──//pendiente// composables/      # Lógica reutilizable (composables)
 ├── router/           # Configuración de rutas
 ├── store/            # Pinia stores
 ├── views/            # Vistas principales
@@ -63,6 +69,11 @@ Este proyecto puede desplegarse fácilmente en Firebase Hosting:
 npm run build
 firebase deploy
 ```
+
+## 🚀 Deploy en Firebase
+
+Puedes acceder a la versión desplegada de la aplicación aquí:  
+👉 [Ir al sitio](https://cripto-vue.web.app/login)
 
 ## 📚 Créditos
 
