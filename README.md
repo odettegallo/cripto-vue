@@ -1,6 +1,18 @@
-# 🧩 Proyecto Final Bootcamp — Aplicación Vue 3 + Firebase
+# 🧩 Crypto Portal — Aplicación Vue 3 + Firebase
 
-Este proyecto es el resultado del trabajo final del Bootcamp, desarrollado con un enfoque modular, escalable y centrado en la experiencia de usuario. Utiliza el ecosistema moderno de Vue 3, Vuetify y Firebase para construir una SPA robusta, con gestión de estado persistente, rutas protegidas y pruebas automatizadas.
+**Crypto Portal** es una SPA (Single Page Application) desarrollada como proyecto final del Bootcamp, centrada en la educación, seguridad y experiencia de usuario en el ecosistema de criptomonedas. Construida con Vue 3, Vuetify y Firebase, esta aplicación modular permite explorar activos digitales, gestionar sesiones seguras y acceder a contenido educativo.
+
+## 🔐 Funcionalidades principales
+
+- **Autenticación con Firebase**: registro, inicio y cierre de sesión con rutas protegidas.
+- **Panel de usuario personalizado**: acceso tras login con visualización de correo y navegación segura.
+- **Visualización de criptomonedas en tiempo real**: precios actualizados y opción de agregar al carrito.
+- **Gestión de estado persistente con Pinia**: mantiene la sesión activa y sincroniza datos clave.
+- **Componentes reutilizables con Vuetify**: diseño responsivo y coherente basado en Material Design.
+- **Documentación educativa integrada**: explicaciones sobre blockchain, seguridad y estrategias de inversión.
+- **Pruebas unitarias con Vitest**: cobertura de componentes críticos para asegurar calidad.
+- **Despliegue en Firebase Hosting**: acceso público a la versión en producción.
+
 
 ## 🚧 Estado del Proyecto
 
@@ -38,14 +50,6 @@ npm run build       # Compila para producción
 npm run test        # Ejecuta pruebas con Vitest
 ```
 
-## 🔐 Funcionalidades destacadas
-
-- Autenticación con Firebase (registro, login, logout)
-- Rutas protegidas según estado de sesión
-- Persistencia de estado con Pinia
-- Componentes reutilizables con Vuetify
-- Pruebas unitarias de componentes clave
-- Arquitectura modular y escalable
 
 ## 🗂️ Estructura del proyecto
 
