@@ -10,7 +10,7 @@
 - **Gestión de estado persistente con Pinia**: mantiene la sesión activa y sincroniza datos clave.
 - **Componentes reutilizables con Vuetify**: diseño responsivo y coherente basado en Material Design.
 - **Documentación educativa integrada**: explicaciones sobre blockchain, seguridad y estrategias de inversión.
-- **Pruebas unitarias con Vitest**: cobertura de componentes críticos para asegurar calidad.
+- // pendiente **Pruebas unitarias con Vitest**: cobertura de componentes críticos para asegurar calidad.
 - **Despliegue en Firebase Hosting**: acceso público a la versión en producción.
 
 
