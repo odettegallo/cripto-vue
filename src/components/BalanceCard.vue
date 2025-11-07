@@ -12,7 +12,7 @@
     <v-col v-for="(amount, asset) in balances" :key="asset" cols="12" md="4">
       <v-card class="cripto-card-luxury h-100" elevation="8">
         <v-card-text>
-          <p class="display-3 fw-bold text-gradient mb-1">{{ amount.toFixed(4) }}</p>
+          <p class="display-3 fw-bold text-gradient mb-1">{{ typeof amount === 'number' ? amount.toFixed(4) : '0.0000' }}</p>
           <p class="text-muted">{{ asset.toUpperCase() }} Balance</p>
           
           <p class="text-secondary fw-bold mt-3">
