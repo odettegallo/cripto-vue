@@ -24,7 +24,7 @@ export const useCartStore = defineStore('cart', () => {
       cartItems.value.push({
         linkId: link.id,
         nombre: link.nombre,
-        simbolo: link.simbolo,
+        simbolo: link.simbolo, // CORREGIDO: Es un string, no una función
         url_imagen: link.url_imagen,
         cantidad: 1,
         priceUnit: priceUnit,
@@ -65,7 +65,7 @@ export const useCartStore = defineStore('cart', () => {
     }, 3000);
   }
 
-  async function checkout() { // Hacemos la función asíncrona
+  async function checkout() {
     if (cartItems.value.length > 0) {
       const walletStore = useWalletStore(); 
       const authStore = useAuthStore();     
@@ -78,14 +78,13 @@ export const useCartStore = defineStore('cart', () => {
       
       const itemsToCheckout = cartItems.value; 
       
-      // 1. Llama a la acción de la billetera para procesar la compra
+      console.log('Items a procesar:', itemsToCheckout);
+      
       const result = await walletStore.processCartCheckout(itemsToCheckout, userId); 
 
       if (result.success) {
-        // 2. Si la compra fue exitosa, vacía el carrito
         cartItems.value = [];
         setNotification('¡Compra exitosa! Verificando tu billetera...');
-        // 3. Redirige a la nueva vista
         router.push({ name: 'Wallet' }); 
       } else {
         setNotification(`Error en el pago: ${result.error}`);
@@ -108,7 +107,6 @@ export const useCartStore = defineStore('cart', () => {
     setNotification,
     checkout
   };
-},{  persist: true,
-},   
-);
-
+},{  
+  persist: true,
+});

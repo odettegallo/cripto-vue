@@ -23,8 +23,7 @@ const TRANSACTION_COLLECTION = 'transactions';
 
 export const useWalletStore = defineStore('wallet', {
     state: () => ({
-        // Saldos del usuario autenticado (clave: símbolo, valor: cantidad)
-        balances: {}, // Cambiado a objeto vacío para cargar desde Firestore
+        balances: {},
         transactions: [],
         loading: false,
         error: null,
@@ -43,7 +42,7 @@ export const useWalletStore = defineStore('wallet', {
             this.error = message;
         },
         
-        // 1. CARGA/ACTUALIZACIÓN DE SALDOS DEL USUARIO (NUEVO)
+        // CORREGIDO: Carga correcta de saldos desde Firebase
         async fetchUserBalances(userId) {
             if (!userId) {
                 this.balances = {};
@@ -55,12 +54,28 @@ export const useWalletStore = defineStore('wallet', {
                 const docSnap = await getDoc(docRef);
 
                 if (docSnap.exists()) {
-                    // Actualiza el estado local con los saldos de Firestore
-                    this.balances = docSnap.data();
+                    const data = docSnap.data();
+                    // CORRECCIÓN: Extraer el objeto 'balances' si existe
+                    if (data.balances && typeof data.balances === 'object') {
+                        this.balances = data.balances;
+                    } else {
+                        // Si no hay estructura 'balances', usar todo el documento
+                        // Filtrar campos que no son balances (como lastUpdate, userId)
+                        const { lastUpdate, userId: uid, ...balanceData } = data;
+                        this.balances = balanceData;
+                    }
                 } else {
-                    // Inicializar el documento si no existe (importante para que se cree)
-                    await setDoc(docRef, { initialized: true });
-                    this.balances = {};
+                    // Inicializar estructura correcta
+                    const initialBalances = {
+                        BTC: 0, ETH: 0, LTC: 0, DOGE: 0, XRP: 0,
+                        USDC: 0, BNB: 0, TRX: 0, STETH: 0, USDT: 0, SOL: 0
+                    };
+                    await setDoc(docRef, { 
+                        balances: initialBalances,
+                        lastUpdate: serverTimestamp(),
+                        userId: userId
+                    });
+                    this.balances = initialBalances;
                 }
             } catch (error) {
                 console.error("Error al cargar saldos:", error);
@@ -70,46 +85,56 @@ export const useWalletStore = defineStore('wallet', {
             }
         },
 
-        // 2. PROCESAMIENTO DE LA COMPRA DEL CARRITO (NUEVO y CRÍTICO)
+        // CORREGIDO: Procesamiento correcto del checkout
         async processCartCheckout(cartItems, userId) {
-            if (!userId || cartItems.length === 0) return { success: false, error: "Missing user or items" };
+            if (!userId || cartItems.length === 0) {
+                return { success: false, error: "Missing user or items" };
+            }
 
             this.setLoading(true);
             try {
                 const balanceRef = doc(db, BALANCE_COLLECTION, userId);
                 
+                // Obtener saldos actuales
+                const docSnap = await getDoc(balanceRef);
+                let currentData = docSnap.exists() ? docSnap.data() : {};
+                let currentBalances = currentData.balances || {};
+
                 for (const item of cartItems) {
-                    const { simbolo, cantidad, priceUnit, nombre } = item;
-                    const asset = simbolo.toLowerCase();
-                    const amount = cantidad;
+                    // CORRECCIÓN: simbolo es un string, no una función
+                    const asset = item.simbolo.toUpperCase();
+                    const amount = item.cantidad;
+                    const priceUnit = item.priceUnit;
                     const totalCost = amount * priceUnit;
 
-                    // A. Registrar la transacción en la colección 'transactions'
+                    console.log('Procesando compra:', { asset, amount, priceUnit, totalCost });
+
+                    // A. Registrar la transacción
                     await addDoc(collection(db, TRANSACTION_COLLECTION), {
                         userId,
-                        asset,
+                        asset: asset.toLowerCase(),
                         amount,
                         priceUnit,
                         totalCost,
                         type: 'compra',
-                        timestamp: serverTimestamp(), // Usa timestamp de Firebase
-                        nombreCripto: nombre,
+                        timestamp: serverTimestamp(),
+                        nombreCripto: item.nombre,
                     });
 
-                    // B. Actualizar el saldo en el documento 'user_balances'
-                    const docSnap = await getDoc(balanceRef);
-                    const currentBalances = docSnap.exists() ? docSnap.data() : {};
+                    // B. Actualizar el saldo
                     const currentAmount = currentBalances[asset] || 0;
-                    
                     const newAmount = currentAmount + amount;
-                    
-                    await updateDoc(balanceRef, {
-                        [asset]: newAmount,
-                    });
+                    currentBalances[asset] = newAmount;
                 }
                 
-                // Actualizar el estado local de Pinia después de las transacciones
-                await this.fetchUserBalances(userId); 
+                // Actualizar en Firebase
+                await updateDoc(balanceRef, {
+                    balances: currentBalances,
+                    lastUpdate: serverTimestamp()
+                });
+                
+                // Actualizar estado local
+                await this.fetchUserBalances(userId);
                 
                 return { success: true };
 
@@ -122,33 +147,36 @@ export const useWalletStore = defineStore('wallet', {
             }
         },
 
-        // 3. SUSCRIPCIÓN AL HISTORIAL DE TRANSACCIONES (Modificado para llamar a fetchUserBalances)
+        // Suscripción al historial de transacciones
         subscribeToTransactions() {
             const authStore = useAuthStore();
             const userId = authStore.user?.uid;
+            
             if (!userId) {
-                 this.transactions = [];
-                 this.balances = {}; 
-                 return () => {};
+                this.transactions = [];
+                this.balances = {};
+                return () => {};
             }
             
-            // Carga los balances al suscribirse para tener datos al inicio
-            this.fetchUserBalances(userId); 
+            // Cargar balances al inicio
+            this.fetchUserBalances(userId);
             
-            // ... (resto de la lógica de onSnapshot para transactions) ...
             const q = query(
                 collection(db, TRANSACTION_COLLECTION),
                 where("userId", "==", userId),
                 orderBy("timestamp", "desc"),
-                limit(50) 
+                limit(50)
             );
 
             return onSnapshot(q, (snapshot) => {
                 this.transactions = snapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data(),
-                    timestamp: doc.data().timestamp?.toDate(), 
+                    timestamp: doc.data().timestamp?.toDate(),
                 }));
+                
+                // Recargar balances cuando hay nuevas transacciones
+                this.fetchUserBalances(userId);
             }, (error) => {
                 console.error("Error al suscribirse a transacciones:", error);
                 this.setError("Error al cargar el historial de transacciones.");

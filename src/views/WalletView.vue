@@ -65,6 +65,10 @@
                 <template v-slot:item.totalCost="{ item }">
                     <span class="font-weight-bold">{{ formatCurrency(item.totalCost) }}</span>
                 </template>
+                
+                <template v-slot:item.pricePerUnit="{ item }">
+                    <span>{{ formatCurrency(item.pricePerUnit || item.priceUnit) }}</span>
+                </template>
             </v-data-table-virtual>
 
             <v-card-text v-if="!walletStore.transactions.length && !walletStore.loading" class="text-center text-medium-emphasis">
@@ -84,28 +88,77 @@ import { useDataStore } from '@/stores/dataStore';
 import BalanceCard from '@/components/BalanceCard.vue'; 
 
 const walletStore = useWalletStore();
-const dataStore = useDataStore(); 
+const dataStore = useDataStore();
 
 const { getBalances } = storeToRefs(walletStore);
 
-// Obtiene los precios de las criptos (asumiendo que están en dataStore.links)
-const currentPrices = computed(() => {
-  return dataStore.getLinks.reduce((acc, link) => {
-    acc[link.simbolo.toLowerCase()] = link.precio || 0; 
-    return acc;
-  }, {});
-});
+// CORREGIDO: Obtiene los precios actuales desde CoinGecko API
+const currentPrices = ref({});
 
-// Calcula el valor total de la billetera en USD
+// Mapeo de símbolos a IDs de CoinGecko
+const symbolToCoingeckoId = {
+  'btc': 'bitcoin',
+  'eth': 'ethereum',
+  'ltc': 'litecoin',
+  'doge': 'dogecoin',
+  'xrp': 'ripple',
+  'usdc': 'usd-coin',
+  'bnb': 'binancecoin',
+  'trx': 'tron',
+  'steth': 'staked-ether',
+  'usdt': 'tether',
+  'sol': 'solana',
+};
+
+// Función para cargar precios desde CoinGecko
+const loadPrices = async () => {
+  try {
+    const symbols = Object.keys(getBalances.value).filter(s => getBalances.value[s] > 0);
+    if (symbols.length === 0) return;
+
+    const coingeckoIds = symbols
+      .map(symbol => symbolToCoingeckoId[symbol.toLowerCase()])
+      .filter(id => id);
+
+    if (coingeckoIds.length === 0) return;
+
+    const idsString = coingeckoIds.join(',');
+    const response = await fetch(
+      `https://api.coingecko.com/api/v3/simple/price?ids=${idsString}&vs_currencies=usd`
+    );
+
+    if (!response.ok) throw new Error('Error al obtener precios');
+
+    const data = await response.json();
+    
+    const prices = {};
+    symbols.forEach(symbol => {
+      const coingeckoId = symbolToCoingeckoId[symbol.toLowerCase()];
+      if (coingeckoId && data[coingeckoId] && data[coingeckoId].usd) {
+        prices[symbol.toLowerCase()] = data[coingeckoId].usd;
+      }
+    });
+
+    currentPrices.value = prices;
+    console.log('Precios cargados:', prices);
+  } catch (error) {
+    console.error('Error al cargar precios:', error);
+  }
+};
+
+// CORREGIDO: Calcula el valor total con los precios correctos
 const totalWalletValue = computed(() => {
-  return Object.keys(getBalances.value).reduce((total, asset) => {
+  let total = 0;
+  Object.keys(getBalances.value).forEach(asset => {
     const amount = getBalances.value[asset] || 0;
-    const price = currentPrices.value[asset] || 0;
-    return total + (amount * price);
-  }, 0);
+    const price = currentPrices.value[asset.toLowerCase()] || 0;
+    total += amount * price;
+  });
+  console.log('Total calculado:', total);
+  return total;
 });
 
-// Filtra balances con cantidad > 0 y formatea
+// Filtra balances con cantidad > 0
 const formattedBalances = computed(() => {
     return Object.keys(getBalances.value)
         .filter(asset => getBalances.value[asset] > 0)
@@ -124,9 +177,8 @@ const transactionHeaders = ref([
     { title: 'Costo Total', align: 'end', key: 'totalCost' },
 ]);
 
-// Helper para formato de moneda
 const formatCurrency = (value) => {
-    if (value === null || value === undefined) return '$0.00';
+    if (value === null || value === undefined || isNaN(value)) return '$0.00';
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
@@ -135,7 +187,6 @@ const formatCurrency = (value) => {
     }).format(value);
 };
 
-// Helper para formato de fecha/hora
 const formatTimestamp = (timestamp) => {
     if (!timestamp) return 'N/A';
     return new Date(timestamp).toLocaleDateString('es-ES', {
@@ -149,13 +200,15 @@ const formatTimestamp = (timestamp) => {
 
 let unsubscribe = null;
 
-onMounted(() => {
-    // Inicia la suscripción a transacciones y carga de balances al montar
+onMounted(async () => {
     unsubscribe = walletStore.subscribeToTransactions();
+    // Cargar precios iniciales
+    await loadPrices();
+    // Actualizar precios cada minuto
+    setInterval(loadPrices, 60000);
 });
 
 onUnmounted(() => {
-    // Limpia la suscripción al desmontar
     if (unsubscribe) {
         unsubscribe();
     }
@@ -163,5 +216,16 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Puedes añadir estilos específicos aquí si es necesario */
+.cripto-card-luxury {
+  background-color: #1a1a1a !important; 
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 12px;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #FFD700 0%, #00FFFF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 </style>
