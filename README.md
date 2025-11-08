@@ -2,6 +2,34 @@
 
 **Crypto Portal** es una SPA (Single Page Application) desarrollada como proyecto final del Bootcamp, centrada en la educación, seguridad y experiencia de usuario en el ecosistema de criptomonedas. Construida con Vue 3, Vuetify y Firebase, esta aplicación modular permite explorar activos digitales, gestionar sesiones seguras y acceder a contenido educativo.
 
+## 🎯 Motivación del Proyecto
+
+La creación del **Crypto Portal** surge de la necesidad de ofrecer un espacio **accesible, educativo y seguro** para que personas interesadas en el mundo de las criptomonedas puedan **aprender, explorar y tomar decisiones informadas**.
+
+En un entorno digital marcado por la **desinformación** y la **volatilidad**, este proyecto busca:
+
+- 🧠 **Democratizar el acceso** al conocimiento sobre tecnología blockchain y activos digitales.
+- 📚 **Promover la alfabetización financiera y digital** mediante contenidos claros y estructurados.
+- 🛠️ **Integrar funcionalidades prácticas** como visualización de precios, simulación de compra y recursos técnicos.
+- 🧐 **Fomentar el pensamiento crítico** frente a promesas de rentabilidad y riesgos comunes en el ecosistema cripto.
+
+---
+
+Este portal fue diseñado con una **arquitectura modular**, utilizando herramientas modernas como:
+
+- ⚙️ `Vue 3`
+- 🔥 `Firebase`
+- 🎨 `Vuetify`
+
+Estas tecnologías garantizan **escalabilidad**, **rendimiento** y una **experiencia de usuario intuitiva**.
+
+Más allá de su funcionalidad técnica, el proyecto representa un compromiso con:
+
+- 🌐 La **educación digital**
+- 🔍 La **transparencia**
+- 🗳️ La **participación informada** en tecnologías emergentes
+
+
 ## 🔐 Funcionalidades principales
 
 - **Autenticación con Firebase**: registro, inicio y cierre de sesión con rutas protegidas.
