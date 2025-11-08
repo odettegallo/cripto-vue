@@ -180,10 +180,8 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos específicos para HomeView */
 .text-gradient {
-  /* Clase definida en App.vue para el título */
-  /* Mantener estilos de App.vue */
+
   background: linear-gradient(135deg, #FFD700 0%, #00FFFF 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;

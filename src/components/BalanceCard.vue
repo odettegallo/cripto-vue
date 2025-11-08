@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-card class="cripto-card-luxury pa-4" elevation="10">
-        <v-card-title class="text-h4 fw-bold text-gradient">Valor Total de la Billetera</v-card-title>
+        <v-card-title class="text-h4-center fw-bold text-gradient">Valor Total de la Billetera</v-card-title>
         <v-card-text class="py-2">
           <p class="display-3 fw-bold text-success">{{ formatCurrency(totalValue) }}</p>
           <p v-if="totalValue === 0" class="text-muted mt-2">
@@ -120,5 +120,6 @@ export default {
 
 .text-success {
   color: #00FFFF !important;
+  font-size: xx-large;
 }
 </style>

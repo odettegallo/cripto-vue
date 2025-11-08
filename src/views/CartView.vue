@@ -4,7 +4,8 @@
       <v-card class="cripto-card-luxury pa-4" elevation="10">
         <v-card-title v-if="cartStore.cartCount === 0" class="text-h5 fw-bold text-center py-5">
           <v-icon color="primary" class="mr-2">mdi-cart-off</v-icon>
-          Tu carrito está vacío. ¡Empieza a comprar!
+          Tu carrito está vacío. <br></br>
+          ¡Empieza a comprar!
         </v-card-title>
 
         <v-data-table-virtual

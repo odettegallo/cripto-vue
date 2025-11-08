@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12" class="text-center">
         <h1 class="text-h3 fw-bold text-gradient mb-4">
-          <v-icon size="40" class="mr-2">mdi-wallet</v-icon>
+          <v-icon color="secondary" size="40" class="mr-2 wallet">mdi-wallet</v-icon>
           Mi Billetera Cripto
         </h1>
         <p class="text-medium-emphasis">
@@ -216,6 +216,10 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.wallet {
+  color: aliceblue;
+}
+
 .cripto-card-luxury {
   background-color: #1a1a1a !important; 
   border: 1px solid rgba(255, 215, 0, 0.3);
