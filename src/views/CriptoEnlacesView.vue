@@ -3,7 +3,7 @@
     <v-container class="py-4">
       <div class="d-flex align-center justify-space-between mb-4">
         <div>
-          <h1 class="h3 text-gradient mb-1">Cripto Enlaces</h1>
+          <h1 class="h3 text-gradient mb-1">Crypto Enlaces</h1>
           <p class="text-dark mb-0">Portal de compra segura</p>
         </div>
       </div>

@@ -5,7 +5,7 @@
 
       <div class="d-flex align-right justify-space-between mb-0">
         <div>
-          <h1 class="h3 text-gradient mb-1">Mi Billetera Cripto</h1>
+          <h1 class="h3 text-gradient mb-1">Crypto Billetera</h1>
           <p class="text-dark mb-0">Revisa tus saldos de criptomonedas y tu historial de compras.</p>
         </div>
       </div>
