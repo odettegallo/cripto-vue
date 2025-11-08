@@ -162,9 +162,7 @@ export default {
       }
     });
 
-    // Cambiar la referencia de 'getCourses' a 'getLinks'
     const links = computed(() => dataStore.getLinks); 
-    // `role` no se usa directamente en el store actual, solo `isAdmin`
     const isAdmin = computed(() => authStore.isAdmin);
     const currentEmail = computed(() => authStore.currentUserEmail);
 

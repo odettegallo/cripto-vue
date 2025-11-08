@@ -1,14 +1,15 @@
 <template>
-  <v-container class="py-10">
+  <v-container class="py-4">
     <v-row>
-      <v-col cols="12" class="text-center">
-        <h1 class="text-h3 fw-bold text-gradient mb-4">
-          <v-icon color="secondary" size="40" class="mr-2 wallet">mdi-wallet</v-icon>
-          Mi Billetera Cripto
-        </h1>
-        <p class="text-medium-emphasis">
-          Revisa tus saldos de criptomonedas y tu historial de compras.
-        </p>
+      <v-col cols="12">
+
+      <div class="d-flex align-right justify-space-between mb-0">
+        <div>
+          <h1 class="h3 text-gradient mb-1">Mi Billetera Cripto</h1>
+          <p class="text-dark mb-0">Revisa tus saldos de criptomonedas y tu historial de compras.</p>
+        </div>
+      </div>
+        
         
         <v-progress-linear
             v-if="walletStore.loading && !Object.keys(formattedBalances).length"
