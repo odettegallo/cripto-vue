@@ -111,3 +111,8 @@ Puedes acceder a la versión desplegada de la aplicación aquí:
 
 Desarrollado por **Reina** como proyecto final del Bootcamp.  
 Contribuciones, sugerencias y feedback son bienvenidos.
+
+## 📄 Licencia
+
+Este proyecto está licenciado bajo los términos de la [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).  
+Esto garantiza que cualquier modificación o redistribución del código debe mantenerse bajo la misma licencia, promoviendo el software libre y la colaboración abierta.
