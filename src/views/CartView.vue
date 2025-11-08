@@ -1,5 +1,11 @@
 <template>
-  <v-container class="py-10">
+  <v-container class="py-4">
+    <div class="d-flex align-center justify-space-between mb-4">
+        <div>
+          <h1 class="h3 text-gradient mb-1">Crypto Carrito</h1>
+          <p class="text-dark mb-0">Portal de compra segura</p>
+        </div>
+      </div>
     <v-col cols="12" md="10" offset-md="1">
       <v-card class="cripto-card-luxury pa-4" elevation="10">
         <v-card-title v-if="cartStore.cartCount === 0" class="text-h5 fw-bold text-center py-5">
