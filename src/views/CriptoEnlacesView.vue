@@ -23,7 +23,6 @@
 </template>
 
 <script>
-// Componentes deben llamarse CryptoAdminTable / CryptoLinkCard
 import AdminDataTable from '@/components/AdminDataTable.vue' 
 import CriptoCard from '@/components/CriptoCard.vue' 
 import { useDataStore } from '@/stores/dataStore';
@@ -39,7 +38,6 @@ export default {
     let unsubscribe = null; 
     
     onMounted(() => {
-      // Renombrar la action del store a subscribeToLinks()
       unsubscribe = dataStore.subscribeToLinks();
     });
 
@@ -49,7 +47,6 @@ export default {
       }
     });
 
-    // Cambiar la referencia de 'getCourses' a 'getLinks'
     const links = computed(() => dataStore.getLinks); 
     const role = computed(() => authStore.role);
     const isAdmin = computed(() => authStore.isAdmin);
@@ -58,7 +55,7 @@ export default {
     return {
       isAdmin,
       currentEmail,
-      links, // Se expone 'links'
+      links,
       role,
       loading: computed(() => dataStore.loading),
       error: computed(() => dataStore.error),
