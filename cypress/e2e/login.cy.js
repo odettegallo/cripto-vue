@@ -1,6 +1,6 @@
 describe('Login Page', () => {
   beforeEach(() => {
-    cy.visit('/login');
+    cy.visit('https://cripto-vue.web.app/login');
   });
     it('should display the login form', () => {
     cy.get('form#loginForm').should('be.visible');
