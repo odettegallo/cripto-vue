@@ -41,6 +41,6 @@ describe('Login Page', () => {
     cy.url().should('include', '/home');
     
     // Verificamos el mensaje que inyecta subscribeToAuthState
-    cy.contains('¡Bienvenido al Crypto Portal!').should('be.visible');
+    cy.contains('Bienvenido al Portal Criptográfico').should('be.visible');
   });
 });
