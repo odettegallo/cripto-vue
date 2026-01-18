@@ -1,25 +1,46 @@
 describe('Login Page', () => {
   beforeEach(() => {
-    cy.visit('https://cripto-vue.web.app/login');
+    // Usamos la configuración de baseUrl definida en cypress.config.js
+    cy.visit('/');
   });
-    it('should display the login form', () => {
-    cy.get('form#loginForm').should('be.visible');
-    cy.get('input[name="username"]').should('be.visible');
-    cy.get('input[name="password"]').should('be.visible');
-    cy.get('button[type="submit"]').should('be.visible');
+
+  it('should display the login form', () => {
+    // En Vuetify, el formulario no tiene id="loginForm"
+    // Buscamos la etiqueta <form> directamente
+    cy.get('form').should('be.visible');
+    cy.get('input[type="email"]').should('exist'); // 'exist' en lugar de 'be.visible' por el tema de opacity
+    cy.get('input[type="password"]').should('exist');
   });
 
   it('should show error message on invalid login', () => {
-    cy.get('input[name="username"]').type('invalidUser');
-    cy.get('input[name="password"]').type('wrongPassword');
+    // Usamos { force: true } para bypass el opacity: 0 de Vuetify
+    cy.get('input[type="email"]').type('invalid@user.com', { force: true });
+    cy.get('input[type="password"]').type('wrongPassword', { force: true });
     cy.get('button[type="submit"]').click();
-    cy.get('.error-message').should('be.visible').and('contain', 'Invalid username or password');
+
+    // En tu LoginView.vue usas v-alert para errores
+    // Vuetify renderiza esto con la clase .v-alert
+    cy.get('.v-alert')
+      .should('be.visible')
+      .and('contain', 'Error al iniciar sesión');
   });
-    it('should login successfully with valid credentials', () => {      
-    cy.get('input[name="username"]').type('validUser');
-    cy.get('input[name="password"]').type('correctPassword');
+
+  it('should login successfully with valid credentials', () => {
+    // Obtenemos los datos desde las variables de entorno
+    const email = Cypress.env('valid_username'); 
+    const password = Cypress.env('valid_password');
+
+    cy.get('input[type="email"]').type(email, { force: true });
+    cy.get('input[type="password"]').type(password, { force: true });
+    
+    // Hacemos click y esperamos la navegación
     cy.get('button[type="submit"]').click();
-    cy.url().should('include', '/dashboard');
-    cy.get('.welcome-message').should('be.visible').and('contain', 'Welcome, validUser');
+
+    // Según tu router (index.js), la ruta de éxito es /home
+    // El authStore redirige a /home tras detectar el cambio de estado en Firebase
+    cy.url().should('include', '/home');
+    
+    // Verificamos el mensaje que inyecta subscribeToAuthState
+    cy.contains('¡Bienvenido al Crypto Portal!').should('be.visible');
   });
 });
